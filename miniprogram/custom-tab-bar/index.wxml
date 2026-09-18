@@ -1,0 +1,9 @@
+<view class="tab-shell" hidden="{{hidden}}">
+  <view class="tabbar">
+    <button wx:for="{{tabs}}" wx:key="pagePath" class="tab {{selected === index ? 'active' : ''}}" data-index="{{index}}" data-path="{{item.pagePath}}" bindtap="switchTab">
+      <view class="tab-icon icon-{{item.icon}}"><view class="icon-detail"></view></view>
+      <text class="tab-label">{{item.text}}</text>
+      <text wx:if="{{item.icon === 'message' && unread}}" class="message-badge">{{unread > 99 ? '99+' : unread}}</text>
+    </button>
+  </view>
+</view>

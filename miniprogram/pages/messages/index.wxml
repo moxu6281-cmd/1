@@ -1,0 +1,24 @@
+<view class="messages-page">
+  <view class="messages-title">聊天消息</view>
+  <input class="message-search" value="{{keyword}}" bindinput="search" placeholder="搜索联系人或订单" />
+  <view wx:if="{{error}}" class="messages-empty">{{error}}</view>
+  <view class="conversation-list">
+    <view wx:if="{{loading}}" class="messages-empty">加载中...</view>
+    <view wx:for="{{visible}}" wx:key="orderNo" class="conversation-row" data-no="{{item.orderNo}}" bindtap="openChat" role="button" aria-label="{{item.peerName}}">
+      <view class="conversation-avatar">{{item.initial}}<text wx:if="{{item.unread}}" class="message-badge">{{item.unread > 99 ? '99+' : item.unread}}</text></view>
+      <view class="conversation-content"><text class="peer-name">{{item.peerName}}</text><text class="last-message">{{item.lastMessage || '还没有消息，点击联系'}}</text><text class="product-name">{{item.product}}</text></view>
+      <text class="conversation-date">{{item.date}}</text>
+    </view>
+    <view wx:if="{{!loading && !error && !visible.length}}" class="messages-empty">{{keyword ? '没有匹配的聊天' : '暂无聊天，订单接单后可在这里联系对方'}}</view>
+  </view>
+  <view wx:if="{{chat}}" class="message-room">
+    <view class="room-head"><view><text class="peer-name">{{chat.peerName}}</text><text class="product-name">{{chat.orderNo}}</text></view><button bindtap="closeChat" aria-label="关闭聊天">×</button></view>
+    <scroll-view scroll-y class="room-messages" scroll-into-view="{{scrollTarget}}">
+      <view wx:if="{{!messages.length && !feedback}}" class="messages-empty">还没有消息</view>
+      <view wx:for="{{messages}}" wx:key="id" class="room-message {{item.isMine ? 'mine' : ''}}"><text class="sender">{{item.senderName}}</text><view class="bubble">{{item.body}}</view><text class="read-state">{{item.isMine ? (item.read ? '已读' : '未读') : ''}}</text></view>
+      <view id="messageBottom"></view>
+    </scroll-view>
+    <text class="room-feedback">{{feedback}}</text>
+    <view class="room-form"><input value="{{input}}" bindinput="typeMessage" maxlength="500" placeholder="输入消息" confirm-type="send" bindconfirm="send" /><button loading="{{sending}}" disabled="{{sending}}" bindtap="send">发送</button></view>
+  </view>
+</view>

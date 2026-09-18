@@ -1,0 +1,68 @@
+<view class="page-shell home-page">
+  <view wx:if="{{loading}}" class="loading">正在读取俱乐部配置...</view>
+  <view wx:elif="{{error}}" class="empty"><text>{{error}}</text><button class="retry" bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <view wx:if="{{previewFallback}}" class="preview-tip">真机本地预览 · 接通 HTTPS 接口后同步商户后台</view>
+    <view class="search-row">
+      <input class="search" value="{{keyword}}" bindinput="onSearch" placeholder="搜索你喜欢的单子" confirm-type="search" />
+      <button class="support" bindtap="openSupport" aria-label="联系客服">
+        <view class="headset-icon"><view class="headset-band"></view><view class="headset-ear left"></view><view class="headset-ear right"></view><view class="headset-mic"></view></view>
+      </button>
+    </view>
+
+    <view class="hero surface {{config.heroImageUrl ? 'has-image' : ''}}">
+      <image wx:if="{{config.heroImageUrl}}" class="hero-media" src="{{config.heroImageUrl}}" mode="widthFix" />
+      <view class="hero-shade"></view>
+      <view class="hero-copy">
+        <text wx:if="{{config.heroEyebrowEnabled !== false}}" class="hero-eye">{{config.heroEyebrow || '俱乐部服务承诺'}}</text>
+        <text wx:if="{{config.heroTitleEnabled !== false}}" class="hero-title">{{config.heroTitle || '客户下单，客服全程跟进'}}</text>
+        <text wx:if="{{config.heroSubtitleEnabled !== false}}" class="hero-sub">{{config.heroSubtitle || '自助下单 · 状态可查 · 售后可追踪'}}</text>
+      </view>
+    </view>
+
+    <view class="notice-line"><text class="speaker">◖</text><text>新客户下单前请先阅读公告，售后规则与客服时间均可配置。</text></view>
+    <view class="live-broadcast" wx:if="{{config.broadcastEnabled !== false && broadcasts.length}}">
+      <view class="broadcast-pill" wx:for="{{broadcasts}}" wx:key="id" style="animation-delay: {{item.delay}}s">
+        <view class="broadcast-avatar" aria-hidden="true"><view class="blank-avatar-head"></view><view class="blank-avatar-body"></view></view>
+        <text class="broadcast-text">{{item.text}}</text>
+      </view>
+    </view>
+
+    <view class="notice-links">
+      <button bindtap="openSupport"><text>客户必看</text><text class="small">下单前须知</text></button>
+      <button bindtap="openSupport"><text>售后规则</text><text class="small">服务保障</text></button>
+      <button bindtap="openSupport"><text>联系客服</text><text class="small">在线咨询</text></button>
+    </view>
+
+    <view class="home-category-panel" wx:if="{{categories.length}}">
+      <view class="category-grid">
+        <button wx:for="{{categories}}" wx:key="name" class="category {{item.name === activeMain ? 'active' : ''}}" hover-class="category-pressed" data-name="{{item.name}}" bindtap="chooseMain">
+          <view class="category-card"><image wx:if="{{item.imageUrl}}" src="{{item.imageUrl}}" mode="aspectFill" /><view wx:else class="category-fallback">{{item.initial}}</view><text>{{item.name}}</text></view>
+        </button>
+      </view>
+      <scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="sub-tabs" wx:if="{{subCategories.length}}">
+        <button class="{{!activeSub ? 'active' : ''}}" hover-class="sub-tab-pressed" data-name="" bindtap="chooseSub">全部类型</button>
+        <button wx:for="{{subCategories}}" wx:key="*this" class="{{item === activeSub ? 'active' : ''}}" hover-class="sub-tab-pressed" data-name="{{item}}" bindtap="chooseSub">{{item}}</button>
+      </scroll-view>
+    </view>
+
+    <view id="products" class="section-title"><text>{{activeSub || '全部类型'}}</text><text class="muted">{{activeMain}}</text></view>
+    <view class="product-grid columns-{{productsPerRow}} {{compactProducts ? 'compact' : ''}} {{ultraCompactProducts ? 'ultra-compact' : ''}}" style="{{gridStyle}}">
+      <button wx:for="{{filteredProducts}}" wx:key="id" class="product-shell" data-id="{{item.id}}" bindtap="openProduct">
+        <view class="product-card">
+          <view class="product-image"><image wx:if="{{item.imageUrl}}" src="{{item.imageUrl}}" mode="aspectFit" /><view wx:else class="product-fallback">{{config.clubName || '电竞俱乐部'}}</view></view>
+          <view class="product-body"><text class="product-title">{{item.title}}</text><text class="product-desc">{{item.desc || '暂无说明'}}</text><view class="product-meta"><view><text class="price">¥{{item.priceText}}</text><text wx:if="{{item.strikePriceText}}" class="old-price">¥{{item.strikePriceText}}</text></view><text>已售 {{item.sold || 0}}</text></view></view>
+        </view>
+      </button>
+    </view>
+    <view wx:if="{{!filteredProducts.length}}" class="empty surface">当前分类暂时没有商品</view>
+  </block>
+
+  <view wx:if="{{noticeVisible}}" class="mask" catchtouchmove="noop">
+    <view class="notice-modal"><button class="close" bindtap="closeNotice">×</button><text class="notice-kicker">{{config.popupHeader || '公告通知'}}</text><scroll-view scroll-y class="notice-article" style="{{noticeBodyStyle}}"><text class="notice-title" style="{{noticeTitleStyle}}">{{config.popupTitle || '下单前请阅读'}}</text><text class="notice-content">{{config.popupContent || config.mustReadText}}</text><view wx:if="{{config.popupBannerText}}" class="notice-banner" style="background: {{config.popupBannerColor || '#8a5a10'}}">{{config.popupBannerText}}</view></scroll-view><view class="notice-footer"><button bindtap="closeNotice">关闭</button></view></view>
+  </view>
+
+  <view wx:if="{{categoryVisible}}" class="mask" bindtap="closeChooser">
+    <view class="category-modal" catchtap="noop"><button class="category-close" bindtap="closeChooser">×</button><text class="category-modal-title">陛下想玩什么？</text><view class="category-choice-grid"><view wx:for="{{categories}}" wx:key="name" class="category-choice-shell"><button class="category-choice" data-name="{{item.name}}" bindtap="chooseMain"><image wx:if="{{item.imageUrl}}" class="category-choice-image" src="{{item.imageUrl}}" mode="aspectFill" /><text>{{item.name}}</text><text class="small">{{item.children.length}} 个类型</text></button></view></view></view>
+  </view>
+</view>

@@ -1,0 +1,175 @@
+page {
+  min-height: 100%;
+  background: #f3f6f9;
+  color: #182235;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 26rpx;
+  letter-spacing: 0;
+}
+
+view,
+text,
+button,
+input,
+textarea,
+scroll-view,
+image {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+button::after {
+  display: none;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding: 24rpx 24rpx calc(180rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #eef6ff 0%, #f7f9fc 46%, #f3f8f5 100%);
+}
+
+.surface {
+  background: rgba(255, 255, 255, .97);
+  border: 1rpx solid #e4ebf1;
+  border-radius: 16rpx;
+  box-shadow: 0 12rpx 30rpx rgba(32, 52, 72, .06);
+}
+
+.loading,
+.empty {
+  width: 100%;
+  padding: 64rpx 30rpx;
+  color: #7a8798;
+  font-size: 25rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.muted {
+  color: #8a95a5;
+}
+
+.price {
+  color: #e43d34;
+  font-weight: 800;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 28rpx 0 18rpx;
+  color: #172033;
+  font-size: 32rpx;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+input,
+textarea {
+  color: #182235;
+  font: inherit;
+}
+
+/* 客服图标：纯 CSS 画（不引外部图），统一在全局定义一份，页面里不要再重复写。
+   - 首页搜索栏用耳机图标 .headset-icon（蓝耳机带 + 黄耳罩 + 麦克风）
+   - 商品详情页底部客服用聊天气泡图标 .chat-icon（蓝气泡 + 三个白点），与首页区分开
+   两者共用 supportPulse 动画；尺寸都按 48rpx 盒子算，换尺寸要同时改子元素的偏移。 */
+.headset-icon {
+  position: relative;
+  width: 48rpx;
+  height: 48rpx;
+  animation: supportPulse 1.7s ease-in-out infinite;
+}
+
+.headset-band {
+  position: absolute;
+  left: 3rpx;
+  top: 2rpx;
+  width: 42rpx;
+  height: 38rpx;
+  border: 6rpx solid #0f6fb9;
+  border-bottom-color: transparent;
+  border-radius: 50% 50% 42% 42%;
+  box-sizing: border-box;
+}
+
+.headset-ear {
+  position: absolute;
+  bottom: 5rpx;
+  width: 12rpx;
+  height: 18rpx;
+  border-radius: 10rpx;
+  background: #f1b900;
+}
+
+.headset-ear.left { left: -2rpx; }
+.headset-ear.right { right: -2rpx; }
+
+.headset-mic {
+  position: absolute;
+  right: 4rpx;
+  bottom: -2rpx;
+  width: 16rpx;
+  height: 6rpx;
+  border-radius: 6rpx;
+  background: #0f6fb9;
+}
+
+/* 聊天气泡客服图标：详情页底部「客服」用（首页搜索栏用的是耳机，两个入口图标要能区分开）。
+   气泡本体 42×32 摆在左上，尾巴是 10×10 的 45° 旋转方块——方块中心正好压在气泡下沿（y=36rpx），
+   露出一个约 7rpx 高的尖角；三个白点用 flex 在气泡里居中。整体占 48rpx 盒子（最低点约 43rpx）。 */
+.chat-icon {
+  position: relative;
+  width: 48rpx;
+  height: 48rpx;
+  animation: supportPulse 1.7s ease-in-out infinite;
+}
+
+.chat-bubble {
+  position: absolute;
+  left: 3rpx;
+  top: 4rpx;
+  width: 42rpx;
+  height: 32rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5rpx;
+  background: #0f6fb9;
+  border-radius: 14rpx 14rpx 14rpx 6rpx;
+}
+
+.chat-tail {
+  position: absolute;
+  left: 9rpx;
+  top: 31rpx;
+  width: 10rpx;
+  height: 10rpx;
+  background: #0f6fb9;
+  border-radius: 0 0 3rpx 0;
+  transform: rotate(45deg);
+}
+
+.chat-dot {
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+@keyframes supportPulse {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2rpx) scale(1.05); }
+}

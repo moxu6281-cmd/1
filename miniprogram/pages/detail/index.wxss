@@ -1,0 +1,32 @@
+.detail-page { padding-bottom: 160rpx; background: #74aaf0; min-height: 100vh; }
+.image-stage { position: relative; overflow: hidden; min-height: 360rpx; background: #fff; }
+.main-image { width: 100%; display: block; background: #fff; }
+.main-image.empty { min-height: 440rpx; display: flex; align-items: center; justify-content: center; color: #8793a2; }
+.detail-dots { height: 48rpx; display: flex; align-items: center; justify-content: center; background: #fff; }
+.detail-dots view { width: 18rpx; height: 18rpx; border-radius: 50%; background: #111; }
+.float-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.float-item { position: absolute; left: 100%; z-index: 2; display: flex; align-items: center; gap: 10rpx; max-width: 78%; padding: 8rpx 18rpx 8rpx 8rpx; border: 1rpx solid rgba(255,255,255,.42); border-radius: 36rpx; color: #fff; background: rgba(92, 126, 168, .58); box-shadow: 0 5rpx 15rpx rgba(18, 45, 78, .12); white-space: nowrap; animation-name: detail-float; animation-timing-function: linear; animation-iteration-count: infinite; }
+.float-item image, .float-avatar { width: 48rpx; height: 48rpx; flex: 0 0 48rpx; border-radius: 50%; }
+.float-avatar { display: flex; align-items: center; justify-content: center; background: rgba(121, 79, 211, .82); color: #fff; font-weight: 700; }
+.float-item > text:last-child { overflow: hidden; text-overflow: ellipsis; font-size: 22rpx; }
+.float-item.lane-0 { top: 13%; }.float-item.lane-1 { top: 29%; }.float-item.lane-2 { top: 47%; }.float-item.lane-3 { top: 65%; }
+@keyframes detail-float { from { transform: translateX(0); } to { transform: translateX(-980rpx); } }
+.detail-info, .reviews { margin: 0 0 20rpx; padding: 28rpx 30rpx; border: 0; border-radius: 0 0 28rpx 28rpx; box-shadow: none; }
+.reviews { border-radius: 28rpx; }
+.detail-price-row { display: flex; align-items: center; justify-content: space-between; }
+.share-mark { color: #75b5ee; font-size: 40rpx; font-weight: 700; }
+.detail-price { display: block; color: #ff8800; font-size: 38rpx; font-weight: 700; }.detail-title { display: block; margin: 18rpx 0; color: #8d8d8d; font-size: 26rpx; line-height: 1.4; font-weight: 700; }
+.stats { display: flex; gap: 30rpx; color: #e4463a; font-weight: 600; }
+.desc { margin-top: 24rpx; padding-top: 22rpx; border-top: 1rpx solid rgba(14,165,233,.2); }
+.block-title { display: block; margin-bottom: 18rpx; font-size: 28rpx; font-weight: 700; }.desc rich-text { color: #334155; line-height: 1.75; }
+.review-head { display: flex; justify-content: space-between; margin-bottom: 20rpx; font-weight: 700; }.review-head text:last-child { color: #4c9bd8; }.review { padding: 16rpx 0; border-top: 1rpx solid #edf0f3; }
+.review-top { display: flex; align-items: center; justify-content: space-between; }
+.review-name { color: #334155; font-size: 26rpx; font-weight: 700; }
+.review-stars { color: #f1b900; font-size: 24rpx; letter-spacing: 2rpx; }
+.review-body { display: block; margin-top: 8rpx; color: #4a5768; font-size: 26rpx; line-height: 1.6; }
+.bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: 172rpx minmax(0, 1fr); gap: 20rpx; align-items: center; padding: 20rpx 32rpx calc(28rpx + env(safe-area-inset-bottom)); background: rgba(255,255,255,.97); box-shadow: 0 -8rpx 28rpx rgba(20, 45, 65, .08); }
+.bottom-bar button { width: 100%; min-width: 0; margin: 0; }
+/* 底部「客服」= 聊天气泡图标 + 文字。图标定义在 app.wxss（.chat-icon），和首页搜索栏的耳机图标是两个不同的图标。
+   172rpx 的列宽要放得下：图标 48rpx + 间距 12rpx + 文字 52rpx = 112rpx，留 60rpx 余量。 */
+.bottom-bar .support { display: flex; align-items: center; justify-content: center; gap: 12rpx; }
+.bottom-bar .buy { height: 96rpx; min-height: 96rpx; display: flex; align-items: center; justify-content: center; padding: 0 24rpx; color: #fff; background: #82c1f2; border-radius: 999rpx; font-size: 36rpx; line-height: 1; box-shadow: 0 16rpx 36rpx rgba(83, 158, 226, .28); }

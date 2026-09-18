@@ -1,0 +1,14 @@
+<view class="order-detail-page">
+  <view wx:if="{{loading}}" class="detail-loading">加载订单中...</view>
+  <view wx:elif="{{error}}" class="detail-loading"><text>{{error}}</text><button bindtap="load">重试</button></view>
+  <block wx:elif="{{order}}">
+    <view class="detail-section detail-status"><text class="status-caption">ORDER STATUS</text><text class="status-name">{{order.status}}</text><text class="status-description">{{statusDescription}}</text><view class="progress-caption"><text>PROGRESS</text><text>{{progress}}%</text></view><progress percent="{{progress}}" stroke-width="3" activeColor="#e9af16" backgroundColor="#e5e7e9" /></view>
+    <view class="detail-section"><text class="detail-heading">商品信息</text><view class="detail-product"><image wx:if="{{order.productImage}}" src="{{order.productImage}}" mode="aspectFit" /><text>{{order.product}}</text><text>×{{order.quantity}}</text></view></view>
+    <view class="detail-section"><text class="detail-heading">订单信息</text><view wx:for="{{fields}}" wx:key="label" class="detail-field"><text>{{item.label}}</text><view><text>{{item.value}}</text><button wx:if="{{item.copy}}" bindtap="copy" data-value="{{item.value}}">复制</button></view></view><view class="detail-paid"><text>{{order.paymentLabel}}</text><text>¥{{order.paidText}}</text></view></view>
+    <view wx:if="{{results.length}}" class="detail-section"><text class="detail-heading">中奖记录</text><view wx:for="{{results}}" wx:key="id" class="detail-result"><image wx:if="{{item.imageUrl}}" src="{{item.imageUrl}}" mode="aspectFit" /><text>第 {{item.drawIndex}} 次</text><text>{{item.name}}</text></view></view>
+    <view class="detail-footer"><text>合计 <text class="price">¥{{order.priceText}}</text></text><button bindtap="orders">订单列表</button><button wx:if="{{order.paymentStatus === 'pending'}}" class="detail-draw" bindtap="pay">继续支付</button><button wx:if="{{canDraw}}" class="detail-draw" bindtap="openLottery">立即抽奖</button></view>
+  </block>
+  <view wx:if="{{lotteryVisible}}" class="prize-mask" catchtouchmove="noop">
+    <view class="prize-dialog"><view class="prize-stage"><view class="prize-disc" style="transform:rotate({{rotation}}deg)"><view wx:for="{{prizes}}" wx:key="id" class="prize-sector" style="{{item.sectorStyle}}"></view><view wx:for="{{prizes}}" wx:key="id" class="prize-item" style="{{item.style}}"><image wx:if="{{item.imageUrl}}" src="{{item.imageUrl}}" mode="aspectFit" /><text wx:else class="prize-placeholder">奖品</text><text>{{item.name}}</text></view></view><button class="prize-draw" bindtap="drawLottery" disabled="{{drawing}}">{{remaining ? '抽' : '完成'}}</button></view><text class="prize-remaining">剩余抽奖次数：{{remaining}}</text><text class="prize-result">{{resultText}}</text><button class="prize-close" bindtap="closeLottery" disabled="{{drawing}}" aria-label="关闭转盘">×</button></view>
+  </view>
+</view>

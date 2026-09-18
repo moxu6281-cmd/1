@@ -1,0 +1,6 @@
+project.private.config.json
+miniprogram_npm/
+.DS_Store
+.codex/
+.workbuddy/
+output/

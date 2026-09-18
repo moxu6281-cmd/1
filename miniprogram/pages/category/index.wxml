@@ -1,0 +1,164 @@
+<!-- 分类页：结构按「分类页面-复刻提示词.md」§5.1 一比一还原（金刚区 4 列 + 左栏二级分类 + 商品卡），
+     配色按本项目统一走橙色（AGENTS.md §6）；底部导航用框架的 custom-tab-bar，页面内不再画一个 tabbar。 -->
+<view class="clf-page">
+
+  <view class="clf-box">
+
+    <top-spacer />
+
+    <view class="clf-nav-bar">
+      <text class="clf-nav-title">全部分类</text>
+    </view>
+
+    <view class="clf-category-section" wx:if="{{topCategories.length}}">
+      <view class="clf-category-grid">
+        <view
+          class="clf-category-item {{activeTopIndex === index ? 'clf-category-active' : ''}}"
+          wx:for="{{topCategories}}"
+          wx:for-item="item"
+          wx:for-index="index"
+          wx:key="index"
+          data-index="{{index}}"
+          bindtap="onTopCategoryTap"
+        >
+          <view class="clf-category-image-wrap {{activeTopIndex === index ? 'clf-category-image-active' : ''}}">
+            <image wx:if="{{item.imageUrl}}" class="clf-category-image" mode="aspectFill" src="{{item.imageUrl}}" />
+            <view wx:else class="clf-category-fallback">{{item.initial}}</view>
+          </view>
+          <view class="clf-category-name-wrap">
+            <text class="clf-category-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="clf-content">
+
+      <view class="clf-sidebar">
+        <view class="skeleton-sidebar" wx:if="{{!subCategories.length}}">
+          <view
+            class="skeleton-sidebar-item"
+            wx:for="{{skeletonSidebar}}"
+            wx:for-item="item"
+            wx:for-index="index"
+            wx:key="index"
+          />
+        </view>
+        <view
+          class="clf-sidebar-item {{activeSubIndex === index ? 'clf-sidebar-active' : ''}}"
+          wx:for="{{subCategories}}"
+          wx:for-item="cat"
+          wx:for-index="index"
+          wx:key="index"
+          data-index="{{index}}"
+          data-id="{{cat}}"
+          bindtap="onSubCategoryTap"
+        >
+          <text class="clf-sidebar-text">{{cat}}</text>
+        </view>
+      </view>
+
+      <view class="clf-main">
+
+        <view wx:if="{{activeTab === 0}}">
+
+          <view class="skeleton-list" wx:if="{{!goodsList.length && !subCategories.length}}">
+            <view
+              class="skeleton-card"
+              wx:for="{{skeletonGoods}}"
+              wx:for-item="item"
+              wx:for-index="index"
+              wx:key="index"
+            >
+              <view class="skeleton-thumb" />
+              <view class="skeleton-info">
+                <view class="skeleton-title" />
+                <view class="skeleton-sales" />
+                <view class="skeleton-bottom">
+                  <view class="skeleton-price" />
+                  <view class="skeleton-btn" />
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="clf-category-title" wx:if="{{subCategories.length}}">
+            <text class="clf-category-title-text">{{currentSubName}}</text>
+          </view>
+
+          <view class="clf-product-list">
+            <view
+              class="clf-product-card"
+              wx:for="{{goodsList}}"
+              wx:for-item="goods"
+              wx:for-index="index"
+              wx:key="index"
+              data-id="{{goods.id}}"
+              bindtap="goDetail"
+            >
+              <view class="clf-product-left">
+                <image wx:if="{{goods.imageUrl}}" class="clf-product-thumb" lazy-load mode="aspectFill" src="{{goods.imageUrl}}" />
+                <view wx:else class="clf-product-thumb clf-product-thumb-fallback">暂无图片</view>
+              </view>
+              <view class="clf-product-right">
+                <text class="clf-product-title">{{goods.title}}</text>
+                <text class="clf-product-sales">销量：{{goods.sold || 0}}</text>
+                <view class="clf-product-bottom">
+                  <text class="clf-product-price">¥{{goods.priceText}}</text>
+                  <button class="clf-product-btn" data-id="{{goods.id}}" catchtap="buy">立即下单</button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{activeTab === 1}}">
+          <view class="skeleton-list" wx:if="{{!rankingList.length && !rankingLoaded}}">
+            <view
+              class="skeleton-card"
+              wx:for="{{skeletonRank}}"
+              wx:for-item="item"
+              wx:for-index="index"
+              wx:key="index"
+            >
+              <view class="skeleton-thumb" />
+              <view class="skeleton-info">
+                <view class="skeleton-title" />
+                <view class="skeleton-sales" />
+                <view class="skeleton-bottom">
+                  <view class="skeleton-price" />
+                  <view class="skeleton-btn" />
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <view class="rank-list">
+            <view
+              class="rank-item"
+              wx:for="{{rankingList}}"
+              wx:for-item="goods"
+              wx:for-index="index"
+              wx:key="index"
+              data-id="{{goods.id}}"
+              bindtap="goDetail"
+            >
+              <view class="rank-num {{'rank-' + (index + 1)}}">{{index + 1}}</view>
+              <image wx:if="{{goods.imageUrl}}" class="rank-thumb" lazy-load mode="aspectFill" src="{{goods.imageUrl}}" />
+              <view wx:else class="rank-thumb rank-thumb-fallback">暂无</view>
+              <view class="rank-info">
+                <text class="rank-title">{{goods.title}}</text>
+                <view class="rank-bottom">
+                  <text class="rank-sales">销量: {{goods.sold || 0}}</text>
+                  <text class="rank-price">¥{{goods.priceText}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height:150rpx" />
+</view>

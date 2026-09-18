@@ -1,0 +1,20 @@
+.tab-shell { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; padding: 0 24rpx calc(16rpx + env(safe-area-inset-bottom)); pointer-events: none; }
+.tabbar { height: 96rpx; display: flex; align-items: center; border: 1rpx solid rgba(222, 229, 235, .9); border-radius: 32rpx; background: rgba(255, 255, 255, .96); box-shadow: 0 18rpx 45rpx rgba(31, 48, 65, .17); pointer-events: auto; overflow: hidden; }
+.tab { width: 25%; height: 96rpx; flex: 0 0 25%; margin: 0; padding: 10rpx 0 8rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 0; background: transparent; color: #687384; font-size: 20rpx; line-height: 1; box-sizing: border-box; }
+.tab-label { margin-top: 5rpx; }
+.tab.active { color: #ff8800; }
+.tab { position: relative; width: 20%; flex-basis: 20%; }
+.icon-message { height: 30rpx; border: 3rpx solid currentColor; border-radius: 6rpx 6rpx 6rpx 0; }
+.message-badge { position: absolute; top: 2rpx; right: 22rpx; min-width: 28rpx; height: 28rpx; padding: 0 6rpx; border-radius: 16rpx; background: #f34e4e; color: #fff; font-size: 20rpx; line-height: 28rpx; }
+.tab-icon { position: relative; width: 33rpx; height: 33rpx; color: currentColor; box-sizing: border-box; }
+.icon-home { margin-top: 4rpx; border: 3rpx solid currentColor; border-top: 0; border-radius: 3rpx 3rpx 7rpx 7rpx; transform: scale(.76); }
+.icon-home::before { content: ""; position: absolute; left: 2rpx; top: -12rpx; width: 23rpx; height: 23rpx; border-left: 3rpx solid currentColor; border-top: 3rpx solid currentColor; transform: rotate(45deg); border-radius: 3rpx; }
+.icon-home .icon-detail { position: absolute; left: 11rpx; bottom: 0; width: 8rpx; height: 15rpx; border: 3rpx solid currentColor; border-bottom: 0; }
+.icon-grid { display: grid; grid-template-columns: repeat(2, 12rpx); grid-template-rows: repeat(2, 12rpx); gap: 5rpx; }
+.icon-grid::before, .icon-grid::after, .icon-grid .icon-detail, .icon-grid .icon-detail::after { content: ""; width: 12rpx; height: 12rpx; border: 3rpx solid currentColor; border-radius: 3rpx; box-sizing: border-box; }
+.icon-grid .icon-detail { display: block; }.icon-grid .icon-detail::after { position: absolute; right: 0; bottom: 0; }
+.icon-order { border: 3rpx solid currentColor; border-radius: 6rpx; }
+.icon-order::before, .icon-order::after, .icon-order .icon-detail { content: ""; position: absolute; left: 6rpx; right: 6rpx; height: 3rpx; border-radius: 2rpx; background: currentColor; }
+.icon-order::before { top: 7rpx; }.icon-order::after { top: 14rpx; }.icon-order .icon-detail { top: 21rpx; }
+.icon-user::before { content: ""; position: absolute; left: 10rpx; top: 1rpx; width: 13rpx; height: 13rpx; border: 3rpx solid currentColor; border-radius: 50%; box-sizing: border-box; }
+.icon-user::after { content: ""; position: absolute; left: 4rpx; bottom: 0; width: 25rpx; height: 15rpx; border: 3rpx solid currentColor; border-bottom: 0; border-radius: 18rpx 18rpx 0 0; box-sizing: border-box; }

@@ -1,0 +1,69 @@
+.submit-page { min-height: 100vh; padding: 28rpx 22rpx 168rpx; background: linear-gradient(180deg, #edf8ff 0%, #f5fbfd 34%, #f7f8fa 100%); box-sizing: border-box; }
+.summary, .payment, .form { margin-bottom: 22rpx; border: 1rpx solid #e7edf2; border-radius: 20rpx; background: #fff; box-shadow: 0 14rpx 36rpx rgba(31, 41, 55, .05); box-sizing: border-box; }
+.summary { padding: 30rpx; }
+.summary-count { display: block; margin-bottom: 24rpx; color: #657386; font-size: 25rpx; }
+.summary-product { display: flex; gap: 22rpx; padding-bottom: 28rpx; border-bottom: 1rpx solid #edf1f4; }
+.summary-product image { width: 160rpx; height: 160rpx; flex: 0 0 160rpx; border: 1rpx solid #e7edf2; border-radius: 18rpx; background: #f7f9fb; }
+.summary-product view { min-width: 0; display: flex; flex-direction: column; gap: 12rpx; }
+.summary-product .title { color: #182333; font-size: 30rpx; font-weight: 700; line-height: 1.35; }
+.summary-product .price { color: #e0443e; font-size: 32rpx; font-weight: 700; }
+.summary-product .muted { display: -webkit-box; overflow: hidden; color: #8792a2; font-size: 22rpx; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.price-line { display: flex; align-items: center; justify-content: space-between; margin-top: 18rpx; padding: 0 8rpx; color: #687588; font-size: 25rpx; }
+.price-line.increase { margin-top: 16rpx; padding: 18rpx 20rpx; border-radius: 18rpx; color: #c95445; background: #fff2ed; }
+.price-line.increase text:first-child { min-width: 0; padding-right: 18rpx; line-height: 1.4; }
+.price-line.increase text:last-child { flex: 0 0 auto; font-weight: 700; }
+.price-line.total { font-size: 30rpx; font-weight: 700; }
+.price-line.total text:last-child { color: #e0443e; font-size: 38rpx; }
+.form { padding: 6rpx 30rpx; }
+.form label, .field { display: block; padding: 28rpx 0; border-bottom: 1rpx solid #edf1f4; }
+.form label > text, .field > text { display: block; margin-bottom: 16rpx; color: #253246; font-size: 30rpx; font-weight: 700; }
+.form input, .form textarea { border: 2rpx solid #e7edf2; border-radius: 18rpx; color: #263449; background: #f7f9fb; box-sizing: border-box; }
+.form input { width: 100%; height: 92rpx; min-height: 92rpx; padding: 0 24rpx; font-size: 30rpx; line-height: normal; }
+.form input:focus, .form textarea:focus { border-color: #88d4c8; background: #fff; box-shadow: 0 0 0 6rpx rgba(24, 169, 153, .1); }
+.form textarea { width: calc(100% - 24rpx); height: 136rpx; margin: 0 auto; padding: 22rpx; }
+/* 区服与接单方式都是「各占一半」的分段按钮（与老板端下单表单一致）：
+   两列排布、按钮文字继承标签的 700 字重；区服多于两个时按两列换行。 */
+.segments { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.segments button { flex: 0 0 calc(50% - 8rpx); height: 80rpx; margin: 0; border: 1rpx solid #e5ebf0; border-radius: 18rpx; color: #5f6c7e; background: #f5f7f9; font-size: 30rpx; font-weight: 700; line-height: 78rpx; }
+.segments button.active { border-color: #ef5b1f; color: #fff; background: linear-gradient(135deg, #ff9f2f 0%, #f05a24 100%); box-shadow: 0 10rpx 26rpx rgba(240, 90, 36, .32); }
+.payment { padding: 28rpx 30rpx; }
+.payment-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20rpx; color: #253246; font-weight: 700; }
+.payment-head text:last-child { color: #0f766e; }
+.payment-segments .recharge { flex: 0 0 132rpx; border-color: #0ea5a8; color: #fff; background: #0ea5a8; }
+.balance-error { display: block; margin-top: 16rpx; color: #dc2626; font-size: 24rpx; }
+.count { display: flex; align-items: center; justify-content: space-between; }
+.count > text { margin: 0; }
+.count view { display: flex; align-items: center; gap: 24rpx; }
+.count button { width: 84rpx; height: 80rpx; padding: 0; border: 1rpx solid #e5ebf0; border-radius: 18rpx; line-height: 76rpx; background: #f5f7f9; font-size: 30rpx; }
+.submit-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 18rpx 24rpx calc(18rpx + env(safe-area-inset-bottom)); border-top: 1rpx solid #e7edf2; background: rgba(255, 255, 255, .96); box-shadow: 0 -14rpx 38rpx rgba(31, 41, 55, .08); }
+.submit-bar .total-price { margin-right: auto; color: #e0443e; font-weight: 700; }
+.submit-bar button { width: 330rpx; height: 92rpx; margin: 0; padding: 0 36rpx; border-radius: 20rpx; line-height: 92rpx; background: linear-gradient(135deg, #ff9f2f 0%, #f05a24 100%); color: #fff; box-shadow: 0 12rpx 28rpx rgba(240, 90, 36, .3); }
+.submit-bar button:active { transform: translateY(2rpx); box-shadow: 0 8rpx 18rpx rgba(240, 90, 36, .24); }
+.payment-confirm-page { min-height: calc(100vh - 196rpx); margin: -28rpx -22rpx -168rpx; padding: 28rpx 24rpx 190rpx; color: #202938; background: #f4f6f9; box-sizing: border-box; }
+.payment-amount-panel { padding: 46rpx 32rpx 40rpx; border: 1rpx solid #e8ebef; border-radius: 16rpx; background: #fff; box-shadow: 0 18rpx 48rpx rgba(31,41,55,.06); text-align: center; }
+.payment-amount-panel > text:first-child { display: block; color: #7a8492; font-size: 25rpx; }
+.payment-amount-panel .payment-amount { display: block; margin: 12rpx 0 30rpx; color: #e4483f; font-size: 68rpx; font-weight: 800; line-height: 1.1; }
+.payment-amount-panel view { color: #697382; font-size: 27rpx; }
+.payment-amount-panel view text { display: inline-block; min-width: 104rpx; margin-left: 10rpx; padding: 9rpx 14rpx; border-radius: 10rpx; color: #313947; background: #eef0f3; font-variant-numeric: tabular-nums; }
+.payment-choice-panel { margin-top: 28rpx; padding: 28rpx 32rpx 14rpx; border: 1rpx solid #e8ebef; border-radius: 16rpx; background: #fff; box-shadow: 0 18rpx 48rpx rgba(31,41,55,.05); }
+.payment-title { display: block; padding-bottom: 24rpx; border-bottom: 1rpx solid #eceff2; font-size: 34rpx; font-weight: 800; }
+.payment-option { min-height: 142rpx; display: grid; grid-template-columns: 44rpx 70rpx minmax(0,1fr) auto; gap: 20rpx; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid #f0f2f4; box-sizing: border-box; }
+.payment-option:last-of-type { border-bottom: 0; }
+.payment-radio, .consent-radio { width: 42rpx; height: 42rpx; display: flex; align-items: center; justify-content: center; border: 4rpx solid #cbd1d8; border-radius: 50%; color: #fff; font-size: 24rpx; box-sizing: border-box; }
+.payment-option.active .payment-radio, .payment-consent .consent-radio { border-color: #2f83f7; background: #2f83f7; }
+.payment-icon { width: 68rpx; height: 68rpx; display: flex; align-items: center; justify-content: center; border-radius: 16rpx; color: #fff; font-size: 34rpx; font-weight: 900; }
+.payment-icon.wallet { background: #64748b; }
+.payment-icon.wechat { background: #18b568; }
+.payment-option > view text { display: block; }
+.payment-option-name { color: #202938; font-size: 31rpx; font-weight: 800; }
+.payment-option > view text:last-child { margin-top: 7rpx; color: #8a94a2; font-size: 23rpx; }
+.recharge-link { padding: 11rpx 15rpx; border-radius: 10rpx; color: #0b8f7b; background: #e9f8f4; font-size: 24rpx; font-weight: 700; }
+.balance-error, .balance-hint { display: block; min-height: 34rpx; margin: 4rpx 0 2rpx 134rpx; font-size: 23rpx; }
+.balance-hint { color: #64748b; }
+.payment-consent { display: flex; align-items: center; justify-content: center; gap: 18rpx; margin-top: 34rpx; color: #687384; font-size: 25rpx; }
+.payment-submit-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; display: grid; grid-template-columns: minmax(0,1fr) 330rpx; gap: 20rpx; align-items: center; padding: 22rpx 24rpx calc(22rpx + env(safe-area-inset-bottom)); border-top: 1rpx solid #e7e9ec; background: rgba(255,255,255,.98); box-shadow: 0 -14rpx 38rpx rgba(31,41,55,.07); }
+.payment-submit-bar > view { color: #697382; font-size: 27rpx; }
+.payment-submit-bar > view text { color: #e4483f; font-size: 38rpx; font-weight: 800; }
+.payment-submit-bar button { width: 330rpx; height: 92rpx; margin: 0; border-radius: 16rpx; color: #fff; background: linear-gradient(135deg,#ffad22 0%,#f38318 100%); box-shadow: 0 12rpx 28rpx rgba(243,131,24,.28); font-size: 31rpx; font-weight: 800; line-height: 92rpx; }
+.payment-submit-bar button[disabled] { color: #fff; background: #cbd1d8; box-shadow: none; }
+

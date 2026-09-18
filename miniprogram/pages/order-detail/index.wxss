@@ -1,0 +1,52 @@
+.order-detail-page { min-height: 100vh; padding: 20rpx 28rpx 150rpx; box-sizing: border-box; background: #f5f6f8; color: #272b30; }
+.detail-section { padding: 36rpx 14rpx; border-bottom: 1rpx solid #e6e8eb; }
+.detail-heading { display: block; margin-bottom: 30rpx; font-size: 34rpx; font-weight: 700; }
+.status-caption, .status-name, .status-description { display: block; }
+.status-caption, .progress-caption { font-size: 24rpx; color: #8b8d91; }
+.status-name { margin: 12rpx 0 30rpx; font-size: 46rpx; color: #cf9400; font-weight: 700; }
+.status-description { color: #686d73; font-size: 28rpx; }
+.progress-caption { display: flex; justify-content: space-between; margin: 40rpx 0 16rpx; }
+.detail-product { display: flex; align-items: center; gap: 24rpx; font-size: 28rpx; }
+.detail-product image { width: 132rpx; height: 132rpx; border-radius: 8rpx; background: white; flex-shrink: 0; }
+.detail-product > text:first-of-type { flex: 1; overflow-wrap: anywhere; }
+.detail-field { display: flex; justify-content: space-between; align-items: center; gap: 16rpx; margin: 30rpx 0; font-size: 26rpx; }
+.detail-field > text { color: #858a90; flex-shrink: 0; }
+.detail-field > view { display: flex; justify-content: flex-end; align-items: center; gap: 10rpx; min-width: 0; }
+.detail-field > view > text { overflow-wrap: anywhere; text-align: right; }
+/* 「复制」按钮：小程序内置 button 自带定宽，只写 flex-shrink:0 压不住 —— 会被撑成整行
+   （2026-09-15 用户截图反馈"比例不舒服"，量下来宽高比 9.25:1、文字只占宽度 11%）。
+   按项目里抽奖关闭钮那套做法加 min/max 宽高四道封印，比例才由我们说了算：
+   116 × 48rpx（约 58 × 24pt），2 个汉字 24rpx 居中，左右各留约 34rpx —— 小而清楚，像颗按钮。 */
+.detail-field button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 116rpx; min-width: 116rpx; max-width: 116rpx; height: 48rpx; min-height: 48rpx; max-height: 48rpx; margin: 0; padding: 0; border: 1rpx solid #d8b451; color: #b38a16; border-radius: 12rpx; background: transparent; font-size: 24rpx; line-height: 1; box-sizing: border-box; }
+.detail-paid { display: flex; justify-content: space-between; margin-top: 40rpx; font-size: 30rpx; }
+.detail-paid > text:last-child, .price { color: #e44f47; font-weight: 700; }
+.detail-footer { position: fixed; z-index: 2; bottom: 0; left: 0; right: 0; display: flex; align-items: center; gap: 14rpx; padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom)); background: #fff; border-top: 1rpx solid #e9eaed; }
+.detail-footer > text { flex: 1; font-size: 26rpx; }
+.detail-footer button { margin: 0; padding: 0 20rpx; border-radius: 10rpx; background: #f2f3f5; color: #565e66; font-size: 26rpx; line-height: 76rpx; }
+.detail-footer button.detail-draw { background: #ffbb00; color: white; }
+.detail-result { display: flex; align-items: center; gap: 18rpx; margin-top: 16rpx; font-size: 26rpx; }
+.detail-result image { width: 76rpx; height: 76rpx; }
+.detail-loading { text-align: center; padding: 60rpx 0; color: #888; }
+.prize-mask { position: fixed; inset: 0; z-index: 99; background: rgba(28,31,33,.48); display: flex; align-items: center; justify-content: center; }
+.prize-dialog { width: 680rpx; max-height: 96vh; text-align: center; }
+.prize-stage { position: relative; width: 680rpx; height: 680rpx; margin-bottom: 30rpx; }
+.prize-disc { position: absolute; inset: 0; overflow: hidden; border: 7rpx solid #ffc421; border-radius: 50%; background: #fff; transition: transform 1.8s cubic-bezier(.12,.72,.08,1); }
+.prize-sector { position: absolute; inset: 0; }
+.prize-item { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6rpx; color: #333; font-size: 22rpx; line-height: 1.3; }
+.prize-item image { width: 100%; height: 115rpx; border-radius: 8rpx; }
+.prize-item > text { max-width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.prize-placeholder { width: 100%; height: 115rpx; background: #eee; }
+.prize-draw { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 150rpx; height: 150rpx; line-height: 134rpx; padding: 0; border: 8rpx solid white; border-radius: 50%; background: linear-gradient(#ffcf13,#ffa500); color: white; font-size: 54rpx; font-weight: 800; box-shadow: 0 4rpx 18rpx #8c82b566; overflow: visible; }
+.prize-draw::before { content: ""; position: absolute; left: 50%; top: -32rpx; transform: translateX(-50%); border-left: 20rpx solid transparent; border-right: 20rpx solid transparent; border-bottom: 28rpx solid white; }
+/* 小程序内置样式里有一条针对 button 的规则（权重 0,1,1，见 pages/home 里 `margin: 0 !important`
+   那条注释的同类问题），会给 button 强行定宽；单类名 `.prize-draw`（0,1,0）压不过它，
+   实测圆心被撑成 354rpx x 150rpx 的横向椭圆。这里用「父级 + 元素名 + 类名」（0,2,1）提高权重，
+   并用 !important 把四条 min/max 一起钉死——只要 width/min/max 都同源，任何一端都改不回椭圆。
+   以后要改圆心尺寸，只改下面这一组数字（三处同改）。 */
+.prize-stage > button.prize-draw { box-sizing: border-box; width: 150rpx !important; height: 150rpx !important; min-width: 150rpx !important; max-width: 150rpx !important; min-height: 150rpx !important; max-height: 150rpx !important; padding: 0; line-height: 134rpx; }
+.prize-dialog > button.prize-close { box-sizing: border-box; width: 76rpx !important; height: 76rpx !important; min-width: 76rpx !important; max-width: 76rpx !important; min-height: 76rpx !important; max-height: 76rpx !important; padding: 0; line-height: 65rpx; }
+.prize-draw[disabled] { color: white; background: #ffbd0b; }
+.prize-remaining { display: inline-block; padding: 16rpx 36rpx; border-radius: 50rpx; background: #303632dd; color: white; font-size: 30rpx; font-weight: 700; }
+.prize-result { display: block; min-height: 42rpx; margin: 16rpx 0; color: white; font-size: 26rpx; }
+.prize-close { width: 76rpx; height: 76rpx; padding: 0; margin: auto; border: 3rpx solid #fff9; border-radius: 50%; background: transparent; color: white; font-size: 50rpx; line-height: 65rpx; }
+button::after { border: 0; }

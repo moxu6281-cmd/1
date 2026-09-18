@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "全部分类",
+  "enablePullDownRefresh": true,
+  "usingComponents": { "top-spacer": "../../components/top-spacer/index" }
+}

@@ -1,0 +1,39 @@
+<view wx:if="{{loading}}" class="loading">正在加载详情...</view>
+<view wx:elif="{{product}}" class="detail-page">
+  <view class="image-stage">
+    <image wx:if="{{product.imageUrl}}" class="main-image" src="{{product.imageUrl}}" mode="widthFix" />
+    <view wx:else class="main-image empty">商户暂未上传商品图</view>
+    <view wx:if="{{floatEnabled}}" class="float-layer">
+      <view wx:for="{{floatItems}}" wx:key="id" class="float-item lane-{{item.lane}}" style="animation-delay: {{item.delay}}s; animation-duration: {{item.duration}}s;">
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <text wx:else class="float-avatar">{{item.initial}}</text>
+        <text>{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="detail-dots"><view></view></view>
+  <view class="detail-info surface">
+    <view class="detail-price-row"><text class="detail-price">￥{{product.priceText}}</text><text class="share-mark">↗</text></view>
+    <text class="detail-title">{{product.title}}</text>
+    <view class="stats"><text>销量 {{product.sold || 0}}</text><text>浏览 {{product.views || 0}}</text></view>
+    <view class="desc">
+      <text class="block-title">商品说明</text>
+      <rich-text nodes="{{product.desc || '暂无商品说明'}}"></rich-text>
+    </view>
+  </view>
+  <view class="reviews surface">
+    <view class="review-head"><text>评价（{{reviews.length}}）</text><text wx:if="{{reviews.length}}">好评率 {{positiveRate}}%</text></view>
+    <view wx:for="{{reviews}}" wx:key="id" class="review">
+      <view class="review-top"><text class="review-name">{{item.initial}} · {{item.displayName}}</text><text class="review-stars">{{item.stars}}</text></view>
+      <text class="review-body">{{item.content}}</text>
+    </view>
+    <view wx:if="{{!reviews.length}}" class="muted">暂无评价</view>
+  </view>
+  <view class="bottom-bar">
+    <button class="support" bindtap="support">
+      <view class="chat-icon"><view class="chat-tail"></view><view class="chat-bubble"><view class="chat-dot"></view><view class="chat-dot"></view><view class="chat-dot"></view></view></view>
+      <text>客服</text>
+    </button>
+    <button class="buy" bindtap="buy">立即购买</button>
+  </view>
+</view>

@@ -1,0 +1,5 @@
+{
+  "navigationBarTitleText": "打手工作台",
+  "enablePullDownRefresh": true,
+  "usingComponents": { "staff-panel": "../../components/staff-panel/index" }
+}
