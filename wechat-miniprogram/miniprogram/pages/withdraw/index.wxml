@@ -1,0 +1,85 @@
+<!-- 提现页：顺序按文档第六节（金额卡 → 明细 → 操作 → 提现方式 → 说明 → 提交），不重排。
+     文案逐字来自 utils/withdraw.js 的 TEXT / SETTLEMENT_FORMS，模板里不写字面量。 -->
+<view class="wd-page">
+  <view wx:if="{{view === 'main'}}">
+    <view class="card">
+      <view class="card-title">{{copy.amountTitle}}</view>
+      <view class="amount-row">
+        <text class="balance-hint">{{identity === 'user' ? copy.availableUser : copy.available}} {{availableText}} {{copy.yuan}}</text>
+        <button class="text-link" bindtap="fillAll">{{copy.withdrawAll}}</button>
+      </view>
+      <view class="amount-input-wrap">
+        <text class="amount-symbol">￥</text>
+        <input class="amount-input" type="digit" value="{{amount}}" bindinput="onAmountInput" placeholder="{{copy.amountPlaceholder}}" />
+      </view>
+      <view class="min-amount-tip">{{copy.minTip}} {{minAmount}} {{copy.yuan}}</view>
+      <view class="commission-detail">
+        <view class="commission-row"><text>{{copy.feeRow}} ({{feeLabel}})</text><text>-{{feeText}} {{copy.yuan}}</text></view>
+        <view class="commission-row actual-row"><text>{{copy.actualRow}}</text><text class="actual-value">{{actualText}} {{copy.yuan}}</text></view>
+      </view>
+      <view class="card-actions">
+        <button class="btn-secondary" bindtap="openSettlement">{{copy.settlementEntry}}</button>
+        <button class="btn-secondary" bindtap="openRecords">{{copy.recordsEntry}}</button>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">{{copy.channelTitle}}</view>
+      <view class="channel-row">
+        <button wx:for="{{channels}}" wx:key="key" class="channel-item {{item.disabled ? 'is-disabled' : ''}} {{channel === item.key ? 'active' : ''}}" data-index="{{index}}" bindtap="chooseChannel">
+          <text class="channel-label">{{item.label}}</text>
+          <text wx:if="{{item.disabled}}" class="channel-closed">未开放</text>
+        </button>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="notice-text">{{notice}}</text>
+    </view>
+
+    <button class="btn-submit" loading="{{submitting}}" disabled="{{submitting || loading || !ready}}" bindtap="submit">{{copy.submit}}</button>
+    <view wx:if="{{error}}" class="wd-error"><text>{{error}}</text><button class="text-link" bindtap="retry">重新加载</button></view>
+  </view>
+
+  <view wx:elif="{{view === 'settlement'}}">
+    <view class="tabs-row">
+      <button wx:for="{{settlementTabs}}" wx:key="key" class="method-tab {{settlementIndex === index ? 'active' : ''}}" data-index="{{index}}" bindtap="chooseSettlementTab">{{item.label}}</button>
+    </view>
+    <view class="card">
+      <text class="card-title">{{settlementTitle}}</text>
+      <view wx:for="{{settlementFields}}" wx:key="key" class="form-row">
+        <text class="form-label">{{item.label}}</text>
+        <input class="form-input" type="{{item.type}}" value="{{item.value}}" data-field="{{item.key}}" bindinput="onFieldInput" placeholder="{{item.placeholder}}" />
+      </view>
+      <view wx:if="{{settlementQr}}" class="form-section">
+        <text class="form-label">{{settlementQr}}</text>
+        <button class="qr-upload-wrap" bindtap="chooseQr">
+          <image wx:if="{{qrImage}}" class="qr-image" src="{{qrImage}}" mode="aspectFill" />
+          <text wx:else class="qr-placeholder-text">{{qrUploadText}}</text>
+        </button>
+      </view>
+    </view>
+    <button class="btn-submit" bindtap="saveSettlement">{{saveText}}</button>
+    <button class="back-link" bindtap="backToMain">‹ 返回提现</button>
+  </view>
+
+  <view wx:else>
+    <view class="tabs-row">
+      <button wx:for="{{recordTabs}}" wx:key="key" class="method-tab {{recordTab === item.key ? 'active' : ''}}" data-tab="{{item.key}}" bindtap="chooseRecordTab">{{item.label}}</button>
+    </view>
+    <view wx:if="{{visibleRecords.length}}" class="record-list">
+      <view wx:for="{{visibleRecords}}" wx:key="orderNo" class="record-row">
+        <view class="record-main">
+          <view class="record-line"><text class="record-channel">{{item.channelText}}</text><text class="record-status status-{{item.status}}">{{item.statusText}}</text></view>
+          <text wx:if="{{item.name || item.account}}" class="record-detail">{{item.name}} {{item.account}}</text>
+          <text class="record-time">{{item.timeText}}</text>
+          <text class="record-amount">{{copy.recordAmount}}¥{{item.amountText}}</text>
+        </view>
+      </view>
+      <view class="list-end">{{copy.recordEnd}}</view>
+    </view>
+    <view wx:elif="{{recordsLoading}}" class="state-message">{{copy.recordLoading}}</view>
+    <view wx:else class="empty-state"><text>{{copy.recordEmpty}}</text></view>
+    <button class="back-link" bindtap="backToMain">‹ 返回提现</button>
+  </view>
+</view>

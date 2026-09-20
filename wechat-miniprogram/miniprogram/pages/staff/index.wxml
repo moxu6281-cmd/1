@@ -1,0 +1,147 @@
+<view class="main-container {{activeTab !== 'home' || feature ? 'workspace-content' : ''}} {{activeTab === 'hall' && !previewOrder && !detailOrder ? 'hall-page' : ''}} {{previewOrder || detailOrder ? 'flow-page' : ''}} {{detailOrder ? 'detail-page' : ''}}">
+  <block wx:if="{{detailOrder}}">
+    <view class="flow-header"><button bindtap="closeDetail">‹ 返回</button></view>
+    <view class="detail-progress">订单进度 <text>{{detailOrder.status === '待服务' ? '待接单' : detailOrder.status}}</text></view>
+    <view wx:if="{{!bondEligible && !detailOrder.staffId}}" class="bond-notice">接单保证金需 ¥{{bondRequirementText}}，当前 ¥{{bondBalanceText}}。请先充值。</view>
+    <view class="flow-card">
+      <text class="flow-title">老板信息</text>
+      <view class="boss-row"><view class="boss-avatar">●</view><view class="boss-info"><text class="boss-name">{{detailOrder.customerName}}</text><text wx:if="{{detailOrder.memberLevel}}" class="member-line">老板会员：{{detailOrder.memberLevel}}</text><text wx:if="{{detailOrder.memberBenefits}}" class="benefit-line">会员权益：{{detailOrder.memberBenefits}}</text><text class="muted">接单时间：{{detailOrder.acceptedTimeText || '无'}}</text><text class="muted">完成时间：{{detailOrder.status === '已完成' ? '已完成' : '未完成'}}</text></view></view>
+      <button wx:if="{{detailOrder.staffId}}" class="chat-entry" data-no="{{detailOrder.no}}" bindtap="openChat">对话聊天</button>
+    </view>
+    <view class="flow-card">
+      <text class="flow-title">商品信息</text>
+      <view class="flow-product"><image wx:if="{{detailOrder.productImage}}" src="{{detailOrder.productImage}}" mode="aspectFill" /><view wx:else class="flow-image-empty">商品</view><view class="flow-product-copy"><text class="flow-product-name">{{detailOrder.productName}}</text><text class="flow-price">¥{{detailOrder.priceText}}</text></view><text class="muted">×{{detailOrder.quantity || 1}}</text></view>
+      <text class="flow-title flow-subtitle">订单信息</text>
+      <view class="flow-field"><text>订单编号</text><text class="flow-value">{{detailOrder.no}}</text><button class="copy-button" data-value="{{detailOrder.no}}" data-label="订单编号" bindtap="copyField">复制</button></view>
+      <view class="flow-field"><text>游戏ID</text><text>{{detailOrder.staffId ? (detailOrder.gameId || '未填写') : '接单后查看'}}</text></view>
+      <view class="flow-field"><text>游戏昵称</text><text>{{detailOrder.staffId ? (detailOrder.gameName || '未填写') : '接单后查看'}}</text></view>
+      <view class="flow-field"><text>游戏区服</text><text>{{detailOrder.server || '未填写'}}</text></view>
+      <view class="flow-field"><text>下单备注</text><text class="flow-value">{{detailOrder.remark || '无'}}</text></view>
+      <view class="flow-field"><text>下单时间</text><text>{{detailOrder.timeText || '未提供'}}</text></view>
+      <view wx:if="{{detailOrder.paidTimeText}}" class="flow-field"><text>付款时间</text><text>{{detailOrder.paidTimeText}}</text></view>
+      <view wx:if="{{detailOrder.prizeText}}" class="flow-field"><text>奖品</text><text class="flow-value">{{detailOrder.prizeText}}</text></view>
+      <view class="flow-field flow-total"><text>实付款</text><text>¥{{detailOrder.priceText}}</text></view>
+    </view>
+    <view class="flow-footer"><view>合计: <text>¥{{detailOrder.priceText}}</text></view><button class="flow-secondary" bindtap="moreOrderActions">更多操作</button><button wx:if="{{!detailOrder.staffId && !bondEligible}}" class="flow-primary" bindtap="openBond">去充值</button><button wx:elif="{{!detailOrder.staffId}}" class="flow-primary" data-no="{{detailOrder.no}}" loading="{{acceptingNo === detailOrder.no}}" disabled="{{!!acceptingNo || !ready}}" bindtap="acceptOrder">接单</button><button wx:elif="{{detailOrder.status === '待开始'}}" class="flow-primary" data-no="{{detailOrder.no}}" loading="{{acceptingNo === detailOrder.no}}" disabled="{{!!acceptingNo || !ready}}" bindtap="startOrder">开始服务</button><button wx:elif="{{detailOrder.status === '服务中'}}" class="flow-primary" data-no="{{detailOrder.no}}" loading="{{acceptingNo === detailOrder.no}}" disabled="{{!!acceptingNo || !ready}}" bindtap="uploadProof">上传结单截图</button></view>
+  </block>
+  <block wx:elif="{{previewOrder}}">
+    <view class="flow-header"><button bindtap="closePreview">‹ 返回</button></view>
+    <view class="preview-status"><view><text class="flow-title">待接单</text><text class="preview-tag">大厅中</text></view><text>当前订单还在接单大厅，接单后可查看完整订单信息</text></view>
+    <view class="flow-card"><view class="flow-card-head"><text class="flow-title">下单老板</text><text wx:if="{{previewOrder.memberLevel}}" class="member-badge">{{previewOrder.memberLevel}}</text></view><view class="boss-row"><view class="boss-avatar">●</view><view class="boss-info"><text class="boss-name">{{previewOrder.customerName}}</text><text class="muted">已支付下单 · 等待接单</text></view></view><view wx:if="{{previewOrder.memberBenefits}}" class="preview-benefit"><text>会员权益</text><text>{{previewOrder.memberBenefits}}</text></view></view>
+    <view class="flow-card"><text class="flow-title">商品信息</text><view class="flow-product"><image wx:if="{{previewOrder.productImage}}" src="{{previewOrder.productImage}}" mode="aspectFill" /><view wx:else class="flow-image-empty">商品</view><view class="flow-product-copy"><text class="flow-product-name">{{previewOrder.productName}}</text><text class="flow-price">¥{{previewOrder.priceText}}</text></view><text class="muted">×{{previewOrder.quantity || 1}}</text></view><text class="flow-title flow-subtitle">订单信息</text><view class="flow-field"><text>订单编号</text><text class="flow-value">{{previewOrder.no}}</text></view><view class="flow-field"><text>游戏区服</text><text>{{previewOrder.server || '未填写'}}</text></view><view class="flow-field"><text>下单备注</text><text>{{previewOrder.remark || '无'}}</text></view><view class="flow-field"><text>下单时间</text><text>{{previewOrder.timeText || '未提供'}}</text></view><view class="flow-field flow-total"><text>预计服务费</text><text>{{previewOrder.incomeText === '待确认' ? '待确认' : '¥' + previewOrder.incomeText}}</text></view></view>
+    <view class="flow-footer"><view>预计服务费: <text>{{previewOrder.incomeText === '待确认' ? '待确认' : '¥' + previewOrder.incomeText}}</text></view><button class="flow-primary" bindtap="previewDetail">查看详情</button></view>
+  </block>
+  <block wx:else>
+  <view wx:if="{{feature}}" class="feature-page">
+    <view class="workspace-header"><button class="back-button" bindtap="closeFeature">‹ 返回</button><text>打手工作台</text><view class="header-spacer" /></view>
+    <staff-panel mode="{{feature}}" profile="{{profile}}" steward="{{steward}}" withdraw-fee-text="{{withdrawFeeText}}" fund-data="{{fundData}}" fines="{{fines}}" fines-unpaid="{{finesUnpaid}}" fines-ended="{{finesEnded}}" fines-loading="{{finesLoading}}" commission="{{commission}}" commission-ended="{{commissionEnded}}" commission-loading="{{commissionLoading}}" ranking="{{ranking}}" ranking-loading="{{rankingLoading}}" ranking-error="{{rankingError}}" bond-submitting="{{bondSubmitting}}" paying-index="{{payingIndex}}" bindnavigate="openFeature" bindredeem="redeemSteward" bindcopycode="copyStewardCode" bindgenerate="generateStewardCode" bindbondsubmit="submitBond" bindselectfine="selectFineTab" bindpayfine="payFine" bindmorefine="moreFines" bindmorecommission="moreCommission" />
+  </view>
+  <block wx:else>
+    <view wx:if="{{activeTab === 'home'}}">
+      <view class="top-section"><view class="top-content">
+        <view class="profile-row">
+          <view class="profile-left">
+            <view class="avatar-wrap"><image wx:if="{{profile.avatarUrl}}" class="avatar" mode="aspectFill" src="{{profile.avatarUrl}}" /><view wx:else class="avatar avatar-placeholder">陪</view></view>
+            <view class="name-col">
+              <view class="username-wrap"><text class="username">{{profile.name}}</text></view>
+              <text class="uid">用户ID: {{profile.numericId || '—'}}</text>
+              <button class="phone-verify-btn" bindtap="unavailable">手机认证 · 暂未接通</button>
+            </view>
+          </view>
+          <view class="profile-right"><button class="work-status-btn work-status-off" bindtap="unavailable"><text class="work-status-text">接单设置 ›</text></button></view>
+        </view><view class="uid-line" />
+      </view></view>
+      <view class="page">
+        <view class="section servant-orders-section">
+          <view class="section-head"><text class="section-title">接单大厅</text><button class="text-action" data-tab="hall" bindtap="chooseTab">全部 {{pendingCount}} 单 ›</button></view>
+          <view class="order-list">
+            <button wx:for="{{stats}}" wx:key="status" class="order-stat-item" data-status="{{item.status}}" bindtap="chooseStatus"><text class="stat-num">{{item.count}}</text><text class="stat-txt">{{item.label}}</text></button>
+          </view>
+          <view class="order-line" />
+          <view class="game-list">
+            <button wx:for="{{games}}" wx:key="name" class="game-item" data-game="{{item.name}}" bindtap="chooseGame">
+              <view class="game-left"><view class="game-icon-box"><image wx:if="{{item.imageUrl}}" mode="aspectFill" src="{{item.imageUrl}}" /><text wx:else>{{item.initial}}</text></view><text>{{item.name}}</text></view>
+              <view class="game-right"><text class="game-pending">{{item.count}}单</text><text class="arrow">›</text></view>
+            </button>
+            <view wx:if="{{!loading && !games.length}}" class="state-message">暂无游戏分类，可到接单大厅查看全部订单</view>
+          </view>
+        </view>
+        <view class="section more-section"><text class="section-title more-title">更多功能</text>
+          <view class="more-grid">
+            <button wx:for="{{features}}" wx:key="id" class="more-item" data-feature="{{item.id}}" bindtap="openFeature"><view class="more-icon-wrap"><view class="nav-icon icon-{{item.icon}}" /></view><text class="more-label">{{item.label}}</text></button>
+          </view>
+        </view>
+        <button class="staff-identity" bindtap="switchToBoss"><text>当前身份：打手</text><text>切换回老板 ›</text></button>
+      </view>
+    </view>
+
+    <view wx:if="{{loading && !pendingOrders.length && !myTasks.length}}" class="state-message">正在同步工作台...</view>
+    <view wx:if="{{error}}" class="error-card"><text>{{error}}</text><button bindtap="retry">重新加载</button></view>
+
+    <view wx:if="{{activeTab === 'hall' || activeTab === 'orders'}}" class="order-page">
+      <view wx:if="{{activeTab === 'orders'}}" class="workspace-header"><text>我的订单</text><text class="header-count">{{doingCount}} 单</text></view>
+      <scroll-view wx:if="{{activeTab === 'orders'}}" scroll-x class="filter-scroll"><view class="filter-inner"><button wx:for="{{statuses}}" wx:key="*this" class="filter-tab {{activeStatus === item ? 'selected' : ''}}" data-status="{{item}}" bindtap="chooseStatus">{{item === '已完成' ? '已结单' : item}}</button></view></scroll-view>
+      <scroll-view wx:else scroll-x class="hall-categories"><view class="hall-category-list"><button class="hall-category {{!activeGame ? 'selected' : ''}}" data-game="" bindtap="chooseGame"><view class="hall-category-icon">全</view><text>全部订单</text></button><button wx:for="{{games}}" wx:key="name" class="hall-category {{activeGame === item.name ? 'selected' : ''}}" data-game="{{item.name}}" bindtap="chooseGame"><image wx:if="{{item.imageUrl}}" class="hall-category-icon" src="{{item.imageUrl}}" mode="aspectFill" /><view wx:else class="hall-category-icon">{{item.initial}}</view><text>{{item.name}}</text></button></view></scroll-view>
+      <view wx:if="{{activeTab === 'hall' && !bondEligible}}" class="bond-notice">接单需保证金 ¥{{bondRequirementText}}，当前 ¥{{bondBalanceText}}。<button bindtap="openBond">去充值</button></view>
+      <view wx:if="{{activeTab === 'orders'}}" class="search-box"><input value="{{keyword}}" bindinput="search" bindconfirm="submitSearch" placeholder="搜索订单、商品或游戏ID" confirm-type="search" /><text class="search-action" bindtap="submitSearch">{{searching ? '搜索中' : '搜索'}}</text></view>
+      <view wx:if="{{activeTab === 'hall'}}" class="hall-orders"><view wx:for="{{visibleOrders}}" wx:key="no" class="hall-order">
+        <view class="hall-boss"><view class="hall-avatar">●</view><view class="hall-boss-copy"><view><text class="hall-boss-name">{{item.customerName}}</text><text class="hall-boss-role">下单老板</text></view><text wx:if="{{item.memberBenefits}}" class="hall-benefit">权益 {{item.memberBenefits}}</text></view><text wx:if="{{item.memberLevel}}" class="member-badge">{{item.memberLevel}}</text></view>
+        <view class="hall-meta"><text>{{item.server || '区服未填写'}}</text><text>预计服务费：{{item.incomeText === '待确认' ? '待确认' : '¥' + item.incomeText}}</text></view>
+        <view class="hall-product"><image wx:if="{{item.productImage}}" src="{{item.productImage}}" mode="aspectFill" /><view wx:else class="hall-product-empty">商品</view><text>{{item.productName}}</text></view>
+        <view class="hall-bottom"><view><text class="hall-price">¥{{item.priceText}}</text><text class="hall-quantity"> ×{{item.quantity || 1}}</text></view><button data-no="{{item.no}}" bindtap="openPreview">查看</button></view>
+      </view></view>
+      <block wx:if="{{activeTab === 'orders'}}"><view wx:for="{{visibleOrders}}" wx:key="no" class="staff-order">
+        <view class="card-header"><text>{{item.timeText || '时间未提供'}}</text><text class="order-status {{item.statusTone}}">{{activeTab === 'hall' ? '待接单' : item.status}}</text></view>
+        <view class="product-row">
+          <image wx:if="{{item.productImage}}" class="product-image" mode="aspectFill" src="{{item.productImage}}" /><view wx:else class="product-image product-placeholder">订单</view>
+          <view class="product-info"><text class="order-name">{{item.productName}}</text><view class="price-row"><text class="order-price">¥{{item.priceText}}</text><text>×{{item.quantity || 1}}</text></view><text class="product-note">{{item.prizeText ? '抽奖结果：' + item.prizeText : '客户：' + item.customerName}}</text></view>
+        </view>
+        <view class="order-fields">
+          <view class="field-row"><text class="field-label">订单编号</text><text class="order-number">{{item.no}}</text><button class="copy-button" data-value="{{item.no}}" data-label="订单编号" bindtap="copyField">复制</button></view>
+          <view class="field-row"><text class="field-label">游戏昵称</text><text class="field-value">{{item.gameName || '未填写'}}</text><button class="copy-button" data-value="{{item.gameName}}" data-label="游戏昵称" bindtap="copyField">复制</button></view>
+          <view class="field-row"><text class="field-label">游戏ID</text><text class="field-value">{{item.gameId || '未填写'}}</text><button class="copy-button" data-value="{{item.gameId}}" data-label="游戏ID" bindtap="copyField">复制</button></view>
+          <view class="field-row"><text class="field-label">游戏区服</text><text class="field-value">{{item.server || '未填写'}}</text></view>
+          <view class="field-row"><text class="field-label">订单备注</text><text class="field-value">{{item.remark || '无'}}</text></view>
+          <view class="field-row income-row"><text>预计分成</text><text class="income">{{item.incomeText === '待确认' ? '待确认' : '¥' + item.incomeText}}</text></view>
+        </view>
+        <view class="order-actions">
+          <button class="secondary-button" data-no="{{item.no}}" bindtap="openDetail">查看详情</button>
+            <button class="secondary-button" data-no="{{item.no}}" bindtap="openChat">{{item.chatUnread ? '未读 ' + item.chatUnread : '联系客户'}}</button>
+            <button wx:if="{{item.status === '待开始'}}" data-no="{{item.no}}" bindtap="startOrder" loading="{{acceptingNo === item.no}}" disabled="{{!!acceptingNo || !ready}}">开始服务</button>
+            <button wx:if="{{item.status === '服务中'}}" data-no="{{item.no}}" bindtap="uploadProof" loading="{{acceptingNo === item.no}}" disabled="{{!!acceptingNo || !ready}}">上传结单截图</button>
+        </view>
+      </view></block>
+      <view wx:if="{{!loading && !error && !visibleOrders.length}}" class="state-message">{{searchTerm || keyword ? '没有匹配的订单' : activeTab === 'hall' ? '暂无可接订单' : '暂无该状态订单'}}</view>
+      <view wx:if="{{visibleOrders.length}}" class="list-end">没有更多了</view>
+    </view>
+
+    <view wx:if="{{activeTab === 'chat'}}" class="chat-list-page">
+      <view class="workspace-header"><text>聊天</text><text class="header-count">{{unreadCount}} 条未读</text></view>
+      <view class="search-box"><input value="{{keyword}}" bindinput="search" placeholder="搜索客户或订单" /></view>
+      <button wx:for="{{visibleOrders}}" wx:key="no" class="conversation-row" data-no="{{item.no}}" bindtap="openChat">
+        <view class="conversation-avatar">客<text wx:if="{{item.chatUnread}}" class="unread-badge">{{item.chatUnread > 99 ? '99+' : item.chatUnread}}</text></view>
+        <view class="conversation-info"><text class="order-name">{{item.customerName}}</text><text>{{item.productName}}</text><text class="conversation-no">{{item.no}}</text></view><text class="arrow">›</text>
+      </button>
+      <view wx:if="{{!loading && !error && !visibleOrders.length}}" class="state-message">{{keyword ? '没有匹配的会话' : '暂无会话，接单后可在这里联系客户'}}</view>
+    </view>
+  </block>
+
+  <view class="player-tabbar"><button wx:for="{{tabs}}" wx:key="id" class="player-tab {{activeTab === item.id && !feature ? 'active' : ''}}" data-tab="{{item.id}}" bindtap="chooseTab"><view class="tab-icon-wrap"><view class="nav-icon icon-{{item.icon}}" /><text wx:if="{{item.id === 'chat' && unreadCount}}" class="unread-dot" /></view><text>{{item.label}}</text></button></view>
+  </block>
+
+  <view wx:if="{{flowNotice}}" class="flow-transition"><view class="flow-transition-card"><text>✓ {{flowNotice.message}}</text><text>进入{{flowNotice.status}}订单</text></view></view>
+  <view wx:if="{{identityVisible}}" class="identity-popup-mask" bindtap="closeIdentity"><view class="identity-popup" catchtap="noop"><view class="identity-popup-header"><text class="identity-popup-title">切换身份</text><button class="close-button" bindtap="closeIdentity">×</button></view><button class="identity-option active" bindtap="closeIdentity"><text>✓ 打手</text><text class="identity-desc">接单与服务 · 当前身份</text></button><button class="identity-option" bindtap="switchToBoss"><text>老板</text><text class="identity-desc">购买服务，查看我的订单</text></button></view></view>
+
+
+  <view wx:if="{{chatVisible}}" class="chat-mask" bindtap="closeChat">
+    <view class="chat-sheet" catchtap="noop">
+      <view class="chat-head"><view><text>{{chatOrder.customerName}}</text><text>{{chatOrder.no}}</text></view><button class="close-button" bindtap="closeChat">×</button></view>
+      <scroll-view scroll-y class="chat-messages" scroll-into-view="chatBottom">
+        <view wx:if="{{!chatMessages.length}}" class="state-message">还没有消息</view>
+        <view wx:for="{{chatMessages}}" wx:key="id" class="chat-message {{item.isMine ? 'mine' : 'other'}}"><text class="sender">{{item.senderName}}</text><view>{{item.body}}</view><text class="read-state">{{item.isMine ? (item.read ? '已读' : '未读') : ''}}</text></view>
+        <view id="chatBottom" />
+      </scroll-view>
+      <view class="chat-form"><input value="{{chatInput}}" bindinput="onChatInput" maxlength="500" placeholder="输入消息" confirm-type="send" bindconfirm="sendChat" /><button bindtap="sendChat" loading="{{sending}}" disabled="{{sending || !chatInput}}">发送</button></view>
+    </view>
+  </view>
+</view>

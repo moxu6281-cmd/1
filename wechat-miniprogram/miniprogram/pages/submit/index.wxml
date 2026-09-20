@@ -1,0 +1,50 @@
+<view wx:if="{{loading}}" class="loading">正在准备订单...</view>
+<view wx:elif="{{product}}" class="submit-page">
+  <block wx:if="{{!paymentVisible}}">
+    <view class="summary surface">
+      <text class="summary-count">共 {{quantity}} 件商品</text>
+      <view class="summary-product">
+        <image src="{{product.imageUrl}}" mode="aspectFit" />
+        <view><text class="title">{{product.orderTitle || product.title}}</text><text class="price">￥{{payPriceText}} × {{quantity}}</text><text class="muted">{{product.orderDesc || product.desc}}</text></view>
+      </view>
+      <view class="price-line"><text>展示价</text><text>￥{{displayPriceText}}</text></view>
+      <view class="price-line increase"><text>涨价原因：{{product.increaseReason || '当前无涨价'}}</text><text>+￥{{increasePriceText}}</text></view>
+      <view class="price-line total"><text>实付款</text><text>￥{{totalText}}</text></view>
+    </view>
+
+    <view class="form surface">
+      <label><text>游戏昵称</text><input value="{{gameName}}" bindinput="inputName" placeholder="请输入游戏昵称" /></label>
+      <label><text>ID账号</text><input value="{{gameId}}" bindinput="inputId" placeholder="请输入ID账号" /></label>
+      <view wx:if="{{servers.length}}" class="field"><text>游戏区服</text><view class="segments"><button wx:for="{{servers}}" wx:key="*this" class="{{serverIndex === index ? 'active' : ''}}" data-index="{{index}}" bindtap="chooseServer">{{item}}</button></view></view>
+      <view class="field"><text>接单方式</text><view class="segments"><button class="{{receiveMode === '随机匹配' ? 'active' : ''}}" data-mode="随机匹配" bindtap="chooseMode">随机匹配</button><button class="{{receiveMode === '指定陪玩' ? 'active' : ''}}" data-mode="指定陪玩" bindtap="chooseMode">指定陪玩</button></view></view>
+      <view class="field count"><text>下单数量</text><view><button bindtap="minus">−</button><text>{{quantity}}</text><button bindtap="plus">＋</button></view></view>
+      <label><text>下单备注</text><textarea value="{{remark}}" bindinput="inputRemark" placeholder="选填" /></label>
+    </view>
+
+    <view class="submit-bar"><text>合计：</text><text class="total-price">￥{{totalText}}</text><button bindtap="openPayment">立即下单</button></view>
+  </block>
+
+  <view wx:else class="payment-confirm-page">
+    <view class="payment-amount-panel">
+      <text>本次支付</text>
+      <text class="payment-amount">￥{{totalText}}</text>
+      <view>支付剩余时间 <text>{{paymentCountdown}}</text></view>
+    </view>
+    <view class="payment-choice-panel">
+      <text class="payment-title">支付方式</text>
+      <view class="payment-option {{paymentMethod === 'balance' ? 'active' : ''}}" data-method="balance" bindtap="choosePayment">
+        <text class="payment-radio">{{paymentMethod === 'balance' ? '✓' : ''}}</text><text class="payment-icon wallet">¥</text>
+        <view><text class="payment-option-name">余额支付</text><text>可用 ￥{{walletBalanceText}}</text></view><text class="recharge-link" catchtap="recharge">充值</text>
+      </view>
+      <view class="payment-option {{paymentMethod === 'wechat' ? 'active' : ''}}" data-method="wechat" bindtap="choosePayment">
+        <text class="payment-radio">{{paymentMethod === 'wechat' ? '✓' : ''}}</text><text class="payment-icon wechat">微</text>
+        <view><text class="payment-option-name">微信支付</text><text>安全快捷支付</text></view>
+      </view>
+      <text wx:if="{{paymentMethod === 'balance' && walletBalance < total}}" class="balance-error">余额不足，还差 ￥{{balanceShortfallText}}</text>
+      <text wx:elif="{{paymentMethod === 'balance'}}" class="balance-hint">本次将从账户余额中扣款</text>
+    </view>
+    <view class="payment-consent" bindtap="togglePaymentConfirmed"><text class="consent-radio">{{paymentConfirmed ? '✓' : ''}}</text><text>我已确认订单信息和支付金额</text></view>
+    <view class="payment-submit-bar"><view>需支付 <text>￥{{totalText}}</text></view><button loading="{{submitting}}" disabled="{{submitting || !paymentConfirmed || paymentExpired || (paymentMethod === 'balance' && walletBalance < total)}}" bindtap="submit">立即支付</button></view>
+  </view>
+
+</view>

@@ -1,0 +1,42 @@
+{
+  "name": "esports-club-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "多商户电竞俱乐部管理系统",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check database.js && node --check server.js && node --check security.js && node --check wallet-credit.js && node --check wechat-pay.js && node --check admin.js && node --check annotation-layer.js && node --check scripts/migrate-sqlite-to-mysql.js && node --check scripts/migrate-customer-names.js && node --check scripts/migrate-legacy-config-keys.js && node --check scripts/backup.js && node --check scripts/test-wallet-credit.js && node --check scripts/verify-wallet-credit-live.js && node --check scripts/verify-owner-wallet.js && node --check scripts/verify-wechat-pay.js && node --check scripts/verify-submit-layout.js && node --check scripts/verify-reviews.js && node --check scripts/negative-test-assertions.js && node --check scripts/watch-verify.js && node --check scripts/annotations.js && node --check scripts/check-all.js && node scripts/check-all.js",
+    "check:all": "node scripts/check-all.js",
+    "annotations": "node scripts/annotations.js",
+    "annotations:pending": "node scripts/annotations.js --all",
+    "migrate:names": "node scripts/migrate-customer-names.js",
+    "migrate:config-keys": "node scripts/migrate-legacy-config-keys.js",
+    "test:security": "node --test scripts/test-security.js",
+    "test": "node --test scripts/test-security.js scripts/test-payment-timeout.js scripts/test-wallet-credit.js scripts/test-lottery-mini.cjs scripts/test-messages-mini.cjs scripts/test-admin-state.js scripts/test-withdraw-fee.js wechat-miniprogram/tests/staff-workbench.test.cjs wechat-miniprogram/tests/withdraw.test.cjs wechat-miniprogram/tests/funds.test.cjs wechat-miniprogram/tests/orders-page.test.cjs",
+    "pretest": "node scripts/check-miniprogram.js && node scripts/check-production.js && node scripts/verify-category-page.js",
+    "verify:all": "node scripts/watch-verify.js --once",
+    "watch:verify": "node scripts/watch-verify.js",
+    "test:wallet": "node --test scripts/test-wallet-credit.js",
+    "test:wallet:live": "node scripts/verify-wallet-credit-live.js",
+    "verify:wallet": "node scripts/verify-owner-wallet.js",
+    "verify:wechatpay": "node scripts/verify-wechat-pay.js",
+    "verify:submit": "node scripts/verify-submit-layout.js",
+    "verify:steward": "node scripts/verify-steward-invites.js",
+    "verify:category": "node scripts/verify-category-page.js",
+    "verify:reviews": "node scripts/verify-reviews.js",
+    "test:assertions": "node scripts/negative-test-assertions.js",
+    "check:release": "node scripts/check-release.js",
+    "package:customer": "node scripts/package-customer.js",
+    "check:mini": "node scripts/check-miniprogram.js",
+    "migrate:mysql": "node scripts/migrate-sqlite-to-mysql.js",
+    "backup": "node scripts/backup.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mysql2": "^3.23.0"
+  }
+}

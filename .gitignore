@@ -1,6 +1,31 @@
-project.private.config.json
-miniprogram_npm/
-.DS_Store
-.codex/
+# ---- 本地运行时 / 工具链（体积大，不入仓）----
+node_modules/
+tools/
+local-runtime/
+dist/
+.env
+server.*.log
+
+# ---- 本地数据：含商户账号、passwordHash、用户上传凭证、旧备份 ----
+data/
+data-store.json
+
+# ---- 嵌套仓库已停用：原 wechat-miniprogram/.git，内容已并入本仓库 ----
+wechat-miniprogram/.git.bak/
+
+# ---- 本地 AI 工具状态 ----
 .workbuddy/
-output/
+
+# ---- 未入仓的本地开发/交付材料（本次只要小程序前端与后台）----
+scripts/
+*.cmd
+*.ps1
+Dockerfile
+docker-compose.yml
+.dockerignore
+AGENTS.md
+PROJECT_HANDOFF.md
+CUSTOMER_DEPLOYMENT.md
+对接.md
+微信小程序部署前提.md
+project.private.config.json

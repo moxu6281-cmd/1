@@ -1,0 +1,121 @@
+:host { display: block; }
+.panel-page { padding: 0 24rpx 32rpx; color: #333; font-size: 26rpx; line-height: 1.8; }
+.panel-page view,.panel-page text,.panel-page button,.panel-page input { box-sizing: border-box; }
+.panel-page button { width: auto; min-width: 0; max-width: 100%; margin: 0; border: none; padding: 12rpx 20rpx; border-radius: 16rpx; color: #a94f0a; background: #fff0dc; font-size: 24rpx; line-height: 1.6; }
+.panel-page button::after { border: none; }
+.panel-page button[disabled] { color: #956843; background: #f5e5d5; opacity: .8; }
+.panel-page .button-hover { opacity: .75; }
+.navbar { padding: 28rpx 0; text-align: center; }
+.navbar-title { color: #333; font-size: 34rpx; font-weight: 600; }
+.integration-notice { display: flex; flex-direction: column; gap: 6rpx; padding: 20rpx 24rpx; border: 1rpx solid #edc69b; border-radius: 16rpx; background: #fff5e7; color: #9a5316; margin-bottom: 24rpx; font-size: 23rpx; }
+.integration-notice text:first-child { font-size: 26rpx; font-weight: 600; }
+.section,.card { background: #fff; border-radius: 24rpx; box-shadow: 0 2rpx 20rpx rgba(0,0,0,.04); padding: 28rpx; margin-bottom: 24rpx; }
+.card-glass { background: rgba(255,255,255,.7); border: 1rpx solid rgba(255,255,255,.9); }
+.section-title { color: #090b08; display: block; font-size: 28rpx; font-weight: 600; margin-bottom: 20rpx; }
+.section-header,.auth-header { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-bottom: 20rpx; }
+.section-header .section-title,.auth-header .section-title { margin-bottom: 0; }
+.auth-status-badge { border-radius: 20rpx; font-size: 22rpx; padding: 8rpx 20rpx; }
+.auth-status-active { background: #eff8e8; color: #508628; }
+.auth-status-inactive { background: #f6f6f6; color: #999; }
+.auth-detail { display: flex; justify-content: space-between; gap: 20rpx; border-bottom: 1rpx solid #eee; padding: 16rpx 0; }
+.auth-label { color: #666; flex-shrink: 0; }
+.auth-value { text-align: right; overflow-wrap: anywhere; }
+.muted-note { display: block; color: #888; font-size: 24rpx; line-height: 1.8; padding: 16rpx 0; }
+.panel-page .outline-button { border: 1rpx solid #edbf8d; background: #fff8ef; margin-top: 20rpx; }
+.manager-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16rpx; padding: 20rpx 0; }
+.manager-actions button { width: 100%; min-width: 0; max-width: 100%; min-height: 88rpx; }
+/* 管事：我的邀请码 + 下级列表（真实数据，不是占位） */
+.steward-code-row { padding: 8rpx 0 4rpx; }
+.steward-code { display: block; color: #c56416; font-size: 40rpx; font-weight: 700; letter-spacing: 6rpx; padding: 12rpx 0; }
+.subordinate-list { display: flex; flex-direction: column; gap: 16rpx; }
+.subordinate-row { display: flex; justify-content: space-between; align-items: center; gap: 16rpx; padding: 22rpx 24rpx; background: #fffaf4; border: 1rpx solid #f2e3d0; border-radius: 16rpx; }
+.subordinate-name { display: block; color: #333; font-size: 28rpx; font-weight: 600; }
+.subordinate-id, .subordinate-code { color: #a96228; font-size: 24rpx; }
+.panel-page .wide-button { width: 100%; min-height: 88rpx; background: #ff8800; color: #fff; }
+.panel-page .text-link { background: transparent; padding: 0; color: #c56416; font-size: 24rpx; }
+.bill-list { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24rpx 12rpx; }
+.panel-page .bill-item { width: 100%; min-width: 0; max-width: 100%; background: transparent; padding: 8rpx 0; text-align: left; }
+.bill-num { display: block; color: #333; font-size: 32rpx; font-weight: 700; }
+.bill-label { display: block; color: #a96228; font-size: 24rpx; margin-top: 12rpx; }
+.level-info-row { margin-bottom: 16rpx; color: #666; }
+.card-title { display: block; border-bottom: 1rpx solid rgba(0,0,0,.08); color: #000; font-size: 32rpx; font-weight: 700; margin-bottom: 24rpx; padding-bottom: 20rpx; }
+.panel-page .btn-submit { width: 100%; min-height: 88rpx; font-size: 30rpx; display: flex; align-items: center; justify-content: center; border-radius: 16rpx; }
+.balance-row { display: flex; align-items: center; gap: 12rpx; }
+.balance-label { color: #666; font-size: 28rpx; }
+.balance-num { color: #000; font-size: 36rpx; font-weight: 700; }
+.balance-unit { color: #666; font-size: 26rpx; }
+.amount-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24rpx; }
+.panel-page .amount-item { width: 100%; min-width: 0; max-width: 100%; padding: 32rpx 24rpx; border-radius: 20rpx; }
+.amount-value { display: block; font-size: 32rpx; font-weight: 700; margin-bottom: 8rpx; }
+.amount-desc { font-size: 24rpx; }
+.tabs-wrap { display: flex; gap: 12rpx; border-radius: 16rpx; padding: 16rpx; background: #fff; margin-bottom: 24rpx; }
+.panel-page .tab-item { flex: 1; width: 0; min-width: 0; max-width: 100%; padding: 16rpx 0; font-size: 24rpx; white-space: nowrap; }
+.panel-page .tab-item.active { background: #ff8800; color: #fff; }
+.header-card,.stats-card { background: linear-gradient(135deg,#667eea,#764ba2); border-radius: 24rpx; margin-bottom: 24rpx; overflow: hidden; color: #fff; }
+.header-content { padding: 36rpx 32rpx; }
+.money-item { display: flex; flex-direction: column; gap: 8rpx; }
+.money-item-center { align-items: center; text-align: center; margin-bottom: 28rpx; }
+.money-row { display: flex; justify-content: space-between; }
+.money-row-bottom { border-top: 1rpx solid rgba(255,255,255,.2); padding-top: 24rpx; }
+.money-label { color: rgba(255,255,255,.85); font-size: 24rpx; }
+.money-value { color: #fff; font-size: 40rpx; font-weight: 700; }
+.money-income,.money-withdraw { font-size: 28rpx; }
+.stats-card { display: flex; padding: 40rpx 20rpx; }
+.stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.stat-value { font-size: 48rpx; font-weight: 700; }
+.stat-label { font-size: 24rpx; margin-top: 8rpx; }
+.list-header { font-size: 32rpx; font-weight: 600; margin-bottom: 18rpx; }
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 64rpx 20rpx 96rpx; font-size: 28rpx; color: #777; text-align: center; }
+.empty-symbol { display: flex; justify-content: center; align-items: center; width: 100rpx; height: 100rpx; border: 2rpx solid #e6dbce; border-radius: 24rpx; font-size: 48rpx; color: #c8b49d; margin-bottom: 28rpx; }
+
+/* ── 资金模块（8 格指标 / 保证金 / 罚单 / 佣金流水，2026-09-18 接通真实数据）── */
+/* 「待交罚款」那格：提示词要求红色警示（warn-num）。 */
+.bill-num-warn { color: #e5534b; }
+/* 选中档位 / 罚款缴纳按钮：都用面板主色橙，选中态要压过 .panel-page button 的浅底深字。 */
+.panel-page .amount-item.active { background: #ff8800; color: #fff; }
+.amount-item.active .amount-desc { color: rgba(255,255,255,.85); }
+.bond-custom-row { display: flex; align-items: center; gap: 16rpx; margin-top: 24rpx; padding-top: 24rpx; border-top: 1rpx solid rgba(0,0,0,.08); }
+.bond-custom-label { color: #666; font-size: 26rpx; flex-shrink: 0; }
+.bond-custom-input { flex: 1; min-width: 0; height: 72rpx; padding: 0 20rpx; border: 1rpx solid #edbf8d; border-radius: 16rpx; background: #fffaf4; color: #333; font-size: 28rpx; }
+.bond-custom-unit { color: #666; font-size: 26rpx; flex-shrink: 0; }
+/* 罚单列表：一张卡一张单，状态色块 + 两行元信息。 */
+.fine-list, .log-list { display: flex; flex-direction: column; gap: 20rpx; }
+.fine-row, .log-row { padding: 24rpx; border: 1rpx solid #f2e3d0; border-radius: 20rpx; background: #fffaf4; }
+.fine-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16rpx; }
+.fine-reason { color: #333; font-size: 30rpx; font-weight: 600; }
+.fine-amount { color: #e5534b; font-size: 32rpx; font-weight: 700; flex-shrink: 0; }
+.fine-meta { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; color: #888; font-size: 24rpx; padding-top: 10rpx; }
+.fine-punish { margin-top: 14rpx; padding: 14rpx 18rpx; border-radius: 14rpx; background: #fff5e7; color: #9a5316; font-size: 24rpx; }
+/* 三态（提示词 6.2）：0 待缴 / 1 已缴 / 2 及以上一律「已撤销」。 */
+.fine-status { border-radius: 20rpx; padding: 6rpx 18rpx; font-size: 22rpx; flex-shrink: 0; }
+.fine-status.status-pending { background: #fff2f0; color: #e5534b; }
+.fine-status.status-done { background: #eff8e8; color: #508628; }
+.fine-status.status-revoked { background: #f6f6f6; color: #999; }
+.panel-page .fine-pay { margin-top: 22rpx; min-height: 76rpx; font-size: 28rpx; }
+/* 佣金流水：一条一行，右侧金额按 amount_text 的符号上色（支出红 / 收入绿）。 */
+.log-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8rpx 16rpx; background: #fff; border-color: #eef1f5; }
+.log-main { display: flex; flex-direction: column; min-width: 0; }
+.log-type { color: #333; font-size: 28rpx; }
+.log-time { color: #999; font-size: 22rpx; }
+.log-side { display: flex; flex-direction: column; align-items: flex-end; }
+.log-amount { font-size: 32rpx; font-weight: 700; }
+.amount-in { color: #508628; }
+.amount-out { color: #e5534b; }
+.log-after { color: #999; font-size: 22rpx; }
+.log-extra { flex-basis: 100%; color: #a96228; font-size: 24rpx; }
+.list-foot { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; color: #888; font-size: 24rpx; padding: 24rpx 8rpx 8rpx; }
+/* 排行榜：与后台「员工管理 / 排行榜」同口径，前 3 名带奖牌 🥇🥈🥉，最多 20 名。 */
+.ranking-head { margin-bottom: 24rpx; }
+.ranking-head .section-title { margin-bottom: 8rpx; }
+.ranking-list { display: flex; flex-direction: column; gap: 16rpx; }
+.ranking-row { display: flex; align-items: center; gap: 20rpx; padding: 24rpx; border-radius: 20rpx; background: #fff; border: 1rpx solid #f2e3d0; }
+.ranking-row.ranking-top { background: #fffaf4; border-color: #f5d7b0; }
+.ranking-rank { flex: 0 0 auto; width: 60rpx; text-align: center; }
+.ranking-medal { font-size: 40rpx; line-height: 1; }
+.ranking-num { color: #999; font-size: 30rpx; font-weight: 700; }
+.ranking-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4rpx; }
+.ranking-name { color: #333; font-size: 30rpx; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ranking-id { color: #a96228; font-size: 24rpx; }
+.ranking-stat { flex: 0 0 auto; text-align: right; }
+.ranking-count { display: block; color: #333; font-size: 28rpx; font-weight: 600; }
+.ranking-amount { display: block; color: #888; font-size: 24rpx; margin-top: 4rpx; }

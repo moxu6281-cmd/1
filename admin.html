@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>电竞俱乐部系统后台</title>
+    <link rel="stylesheet" href="./admin.css?v=20260918-order-row-height" />
+  </head>
+  <body>
+    <section class="login-page" id="loginView">
+      <div class="login-card">
+        <p>CLUB ADMIN</p>
+        <h1>账号密码登录</h1>
+        <label>账号<input id="loginAccount" placeholder="admin 或商户账号" /></label>
+        <label>密码<input id="loginPassword" type="password" placeholder="请输入密码" /></label>
+        <button id="loginBtn">登录后台</button>
+        <span>主管理员演示：admin / admin123。商户子管理员可由主管理员生成。</span>
+      </div>
+    </section>
+
+    <main class="admin-shell" id="adminView" hidden>
+      <aside class="sidebar">
+        <div class="brand">
+          <strong>电竞俱乐部系统</strong>
+          <span>商户后台 / 子管理员</span>
+        </div>
+        <input class="menu-search" id="menuSearch" placeholder="请输入菜单内容" />
+        <nav class="menu" id="menuTree"></nav>
+        <button class="logout" id="logoutBtn">退出登录</button>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p id="breadcrumb">/ 首页</p>
+            <h1 id="pageTitle">首页</h1>
+          </div>
+          <div class="top-actions">
+            <button id="saveBtn">保存并关联前端</button>
+          </div>
+        </header>
+
+        <section class="merchant-strip">
+          <div>
+            <span>当前配置商户</span>
+            <strong id="currentMerchantName">未选择</strong>
+            <em id="currentMerchantAccount"></em>
+          </div>
+          <div class="merchant-switch" id="merchantQuickList"></div>
+        </section>
+
+        <section class="page" id="pageContent"></section>
+      </section>
+    </main>
+
+    <template id="dashboardTemplate">
+      <section class="stats-grid"></section>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>经营概况</h2>
+          <div class="button-row">
+            <button data-range="today">今日</button>
+            <button data-range="7">近七日</button>
+            <button data-range="30">近三十日</button>
+            <button data-action="refresh">刷新</button>
+          </div>
+        </div>
+        <div class="overview-grid">
+          <div><b>支付订单数</b><strong id="paidOrders">32</strong><span>较昨日 +7 笔</span></div>
+          <div><b>支付人数</b><strong id="paidUsers">22</strong><span>较昨日 +2 人</span></div>
+          <div><b>支付金额</b><strong id="paidAmount">585.10</strong><span>较昨日 +360.30 元</span></div>
+          <div><b>昨日访问量</b><strong id="visitCount">11452</strong><span>较前日 +7017 次</span></div>
+        </div>
+      </section>
+      <section class="split">
+        <div class="panel">
+          <div class="panel-head"><h2>商品购买力排行</h2><button data-export="products">导出TOP100</button></div>
+          <table><thead><tr><th>排名</th><th>商品</th><th>销售额</th><th>销量</th></tr></thead><tbody id="productRank"></tbody></table>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>用户购买力排行</h2><button data-export="users">导出TOP100</button></div>
+          <table><thead><tr><th>排名</th><th>用户</th><th>支付金额</th><th>支付件数</th></tr></thead><tbody id="userRank"></tbody></table>
+        </div>
+      </section>
+    </template>
+
+    <template id="settingsTemplate">
+      <section class="panel">
+        <div class="panel-head"><h2>接单保证金</h2><span class="panel-tip">保存后按商户配置生效</span></div>
+        <div class="form-grid">
+          <label>打手接单最低保证金（元）
+            <input id="staffBondRequirement" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="0" />
+            <small>设为 0 则无需充值；大于 0 时，未达到该金额的打手无法接单。生产环境充值尚未开放，请谨慎设置非零门槛。</small>
+          </label>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>商品展示布局</h2>
+          <span class="panel-tip">修改后自动同步客户端商品列表</span>
+        </div>
+        <div class="form-grid">
+          <label>每排显示商品数量
+            <input id="productsPerRow" type="number" min="1" max="4" step="1" inputmode="numeric" placeholder="1-4，例如 3" />
+            <small>客户端网页与微信小程序共用此设置，最多 4 列（手机屏更高列会导致卡片过窄）。</small>
+          </label>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>功能开关</h2>
+        <div class="switch-grid">
+          <label><input id="broadcastEnabled" type="checkbox" /> 首页实时下单通报</label>
+          <label><input id="detailFloatEnabled" type="checkbox" /> 详情图内好评飘屏（用客户真实评价）</label>
+        </div>
+        <div class="form-grid feature-copy-grid">
+          <section class="live-order-tracker full" aria-labelledby="liveOrderTrackerTitle">
+            <div class="live-order-head">
+              <div>
+                <strong id="liveOrderTrackerTitle">首页实时订单跟踪</strong>
+                <small>内容来自真实订单，自动同步且不可手工修改；上方开关仅控制前台是否展示。</small>
+              </div>
+              <span class="tag" id="liveOrderStatus">同步中</span>
+            </div>
+            <div class="live-order-feed" id="liveOrderFeed" aria-live="polite">正在读取最近订单...</div>
+          </section>
+          <p class="panel-tip full">详情图里的飘屏现在显示的是客户真实评价——只有「订单评价」页里审核通过的评价才会飘，内容为「客户昵称：评价内容」，不再需要手填文案。审核在左侧「订单管理 → 订单评价」里操作。</p>
+        </div>
+      </section>
+    </template>
+
+    <template id="carouselTemplate">
+      <section class="panel">
+        <h2>轮播设置</h2>
+        <div class="switch-grid compact-switches">
+          <label><input id="heroEyebrowEnabled" type="checkbox" /> 显示系统名字 / 小标题</label>
+          <label><input id="heroTitleEnabled" type="checkbox" /> 显示横幅主标题</label>
+          <label><input id="heroSubtitleEnabled" type="checkbox" /> 显示横幅说明</label>
+        </div>
+        <div class="form-grid">
+          <label>系统名字 / 小标题<input id="heroEyebrow" placeholder="例如：毒怪问题承诺" /></label>
+          <label>横幅主标题<input id="heroTitle" placeholder="例如：客户下单服务不好直接免单" /></label>
+          <label class="full">横幅说明<input id="heroSubtitle" placeholder="例如：小程序自助下单 · 客服实时跟进 · 售后可追踪" /></label>
+          <div class="full hero-upload-field">
+            <span>上传轮播图片</span>
+            <div class="saved-file-control">
+              <input id="heroImage" class="visually-hidden-file" type="file" accept="image/*" />
+              <button id="heroImageButton" type="button">选择图片</button>
+              <button id="heroImageRemoveBtn" type="button">移除图片</button>
+              <a id="heroImageStatus">尚未上传轮播图</a>
+            </div>
+          </div>
+          <input id="heroImageUrl" type="hidden" />
+          <div class="image-preview full" id="heroImagePreview">尚未上传轮播图</div>
+        </div>
+      </section>
+    </template>
+
+    <template id="productTemplate">
+      <section class="product-page">
+        <div class="product-filter">
+          <label>商品名称<input id="productSearchName" placeholder="请输入商品名称" /></label>
+          <label>商品分类<select id="productSearchCategory"><option value="">请选择商品分类</option></select></label>
+          <label>商品规格<select id="productSearchSpec"><option value="">请选择商品规格</option><option>单规格</option><option>多规格</option></select></label>
+          <label>商品标签<select id="productSearchTag"><option value="">请选择商品标签</option></select></label>
+          <label>打手分成<select id="productSearchShare"><option value="">请选择打手分成</option><option>系统默认</option><option>自定义</option></select></label>
+          <label>创建时间<input id="productSearchDate" type="date" /></label>
+          <div class="product-filter-actions">
+            <button id="productSearchBtn">搜索</button>
+            <button id="productResetBtn" class="admin-icon-reset" type="button" aria-label="重置商品筛选" title="重置商品筛选">↻</button>
+            <button id="productAddBtn" class="admin-add-button" type="button">+ 新增</button>
+            <button id="productBatchDeleteBtn" class="soft danger">删除</button>
+            <button id="productBatchHideBtn" class="soft">隐藏商品</button>
+          </div>
+        </div>
+
+        <div class="product-table-wrap">
+          <div class="product-tabs" id="productStatusTabs">
+            <button class="active" data-status="visible">显示(<span>0</span>)</button>
+            <button data-status="hidden">隐藏(<span>0</span>)</button>
+          </div>
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th><input id="productCheckAll" type="checkbox" /></th>
+                <th>商品编号</th>
+                <th>商品信息</th>
+                <th>商品分类</th>
+                <th>商品标签</th>
+                <th>价格</th>
+                <th>销量</th>
+                <th>库存</th>
+                <th>规格</th>
+                <th>打手分成</th>
+                  <th>状态</th>
+                  <th>抽奖模式</th>
+                <th>排序</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+          <div class="product-pagination">
+            <span id="productTotalText">共 0 条</span>
+            <select id="productPageSize"><option value="10">10条/页</option><option value="20">20条/页</option></select>
+            <button id="productPrevPage">‹</button>
+            <div id="productPages"></div>
+            <button id="productNextPage">›</button>
+          </div>
+        </div>
+
+        <div class="product-modal" id="productModal" hidden>
+          <div class="product-dialog admin-dialog">
+            <header><strong id="productModalTitle">商品信息</strong><button id="productModalClose" type="button" aria-label="关闭商品编辑" title="关闭">×</button></header>
+            <div class="form-grid">
+              <label class="full">商品名称<input id="productTitle" placeholder="详情页和订单页统一使用这个名称" /></label>
+              <input id="productOrderTitle" type="hidden" />
+              <label>大分类<select id="productMainCategory"></select></label>
+              <label>小分类<select id="productCategory"></select></label>
+              <label>商品标签<input id="productTag" placeholder="用于商品管理、搜索和无图占位" /></label>
+              <label>价格<input id="productPrice" type="number" step="0.1" /></label>
+              <label>划线价
+                <span class="price-option-row">
+                  <input id="productStrikePrice" type="number" min="0" step="0.1" placeholder="例如 199.9" />
+                  <span class="price-option-toggle"><input id="productShowStrikePrice" type="checkbox" /> 商品卡显示</span>
+                </span>
+              </label>
+              <label>实付价<input id="productOrderPrice" type="number" step="0.1" /></label>
+              <label>库存<input id="productStock" type="number" /></label>
+              <label>排序<input id="productSort" type="number" /></label>
+              <label>规格<select id="productSpec"><option>单规格</option><option>多规格</option></select></label>
+              <label>浏览量<input id="productViews" type="number" min="0" step="1" /></label>
+              <label>销量<input id="productSold" type="number" min="0" step="1" /></label>
+              <label>打手分成<input id="productShare" placeholder="例如 7 或 70%" /></label>
+              <label class="full product-upload-field"><span>上传商品主图</span>
+                <div class="saved-file-control">
+                  <input id="productImage" class="visually-hidden-file" type="file" accept="image/*" />
+                  <button id="productImageButton" type="button">选择图片</button>
+                  <a id="productImageStatus">尚未上传商品图</a>
+                </div>
+              </label>
+              <input id="imageUrl" type="hidden" />
+              <input id="imageName" type="hidden" />
+              <input id="imagePath" type="hidden" />
+              <div class="product-image-row full">
+                <div class="image-preview" id="imagePreview">尚未上传商品图</div>
+              </div>
+              <label class="full product-editor-label"><span>商品说明</span>
+                <div class="rich-editor-shell">
+                  <div class="rich-toolbar" id="productDescToolbar" aria-label="商品说明编辑工具">
+                    <p class="rich-toolbar-help">先选中说明文字，再点击格式按钮；鼠标停留在按钮上可查看用途。</p>
+                    <div class="rich-toolbar-row">
+                      <button type="button" class="tool-btn strong" data-wrap="<strong>|</strong>" title="加粗选中的文字">加粗</button>
+                      <button type="button" class="tool-btn underline" data-wrap="<u>|</u>" title="给选中的文字添加下划线">下划线</button>
+                      <button type="button" class="tool-btn strike" data-wrap="<s>|</s>" title="给选中的文字添加删除线">删除线</button>
+                      <button type="button" class="tool-btn" data-insert="<br>" title="在光标位置插入换行">换行</button>
+                      <select data-prefix="font" title="修改选中文字的字体">
+                        <option value="">字体</option>
+                        <option value="Helvetica">西文字体 Helvetica</option>
+                        <option value="Arial">西文字体 Arial</option>
+                        <option value="Microsoft YaHei">微软雅黑</option>
+                      </select>
+                      <select data-prefix="size" title="修改选中文字的大小">
+                        <option value="">字号</option>
+                        <option value="12">12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="22">22</option>
+                      </select>
+                    </div>
+                    <div class="rich-toolbar-row">
+                      <button type="button" data-insert="<ul><li>请输入内容</li></ul>" title="插入项目列表">项目列表</button>
+                      <button type="button" data-insert="<a href=''>链接文字</a>" title="插入网页链接">网页链接</button>
+                      <button type="button" data-insert="<img src='' alt='商品说明图'>" title="插入商品说明图片">说明图片</button>
+                      <button type="button" data-insert="<video src='' controls></video>" title="插入商品说明视频">说明视频</button>
+                      <button type="button" data-insert="<hr>" title="插入一条横向分割线">分割线</button>
+                      <button type="button" data-wrap="<code>|</code>" title="给选中的文字添加代码样式">代码样式</button>
+                    </div>
+                  </div>
+                  <textarea id="productDesc" rows="6" placeholder="请输入商品说明，可用上方工具插入图片、链接、列表等内容。"></textarea>
+                </div>
+              </label>
+              <label class="full">订单页说明<textarea id="productOrderDesc" rows="2"></textarea></label>
+              <label class="full">涨价原因<textarea id="productIncreaseReason" rows="2"></textarea></label>
+            </div>
+            <footer><button id="productSaveBtn">保存</button><button id="productCancelBtn" class="plain">取消</button></footer>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <template id="merchantTemplate">
+      <section class="panel owner-only">
+        <h2>生成商户子管理员</h2>
+        <div class="merchant-create">
+          <label>商户账号<input id="merchantAccount" placeholder="例如 club001" /></label>
+          <label>登录密码<input id="merchantPassword" placeholder="给商户的后台密码" /></label>
+          <label>俱乐部名称<input id="merchantClubName" placeholder="例如 怪兽电竞俱乐部" /></label>
+          <button id="createMerchantBtn">生成子管理员</button>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>商户列表</h2>
+        <div class="data-list" id="merchantList"></div>
+      </section>
+    </template>
+
+    <script src="./shared.js?v=20260917"></script>
+    <script src="./admin.js?v=20260918-ranking"></script>
+    <script src="./annotation-layer.js?v=20260913-annotate-send"></script>
+  </body>
+</html>

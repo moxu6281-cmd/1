@@ -1,0 +1,50 @@
+<view class="page-shell mine-page">
+  <!-- 用户要求：按参考图重排「我的」页——顶部渐变会员卡 → 数字卡（余额 / 会员等级）
+       → 累计消费独立一条（用户要求从卡里拎出来，紧跟会员等级后面）→「更多功能」图标宫格 → 底部 tab。
+       不保留「我的订单」「下单说明」「联系客服」；参考图里的成长进度条也不要
+       （系统没有成长值，画一条假进度只会骗人）。余额和累计消费都来自服务端真实数据，不是编的。 -->
+  <view class="mine-hero">
+    <view class="mine-hero-head">
+      <button class="profile-avatar" open-type="chooseAvatar" bindchooseavatar="chooseAvatar"><image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" /><text wx:else>微</text></button>
+      <view class="mine-hero-who" bindtap="editName">
+        <text class="mine-hero-name">{{name}}</text>
+        <text class="mine-hero-id">数字 ID {{numericId || '待生成'}}</text>
+      </view>
+      <text class="member-badge {{memberMeta.className}}">{{memberMeta.text}}</text>
+    </view>
+    <text class="mine-hero-tip">{{memberMeta.tip}}</text>
+  </view>
+  <view class="mine-stats">
+    <button class="mine-stat" bindtap="rechargeBalance"><text class="mine-stat-value">¥{{walletBalanceText}}</text><text class="mine-stat-label">余额</text></button>
+    <button class="mine-stat" bindtap="openMemberBenefits"><text class="mine-stat-value">{{memberLevel}}</text><text class="mine-stat-label">会员等级</text></button>
+  </view>
+  <!-- 累计消费：用户要求从三栏卡里拎出来，单独成一条放在会员等级后面。数字同上，来自服务端真实合计。 -->
+  <button class="mine-spent" bindtap="explainSpent"><text class="mine-spent-label">累计消费</text><text class="mine-spent-value">¥{{totalSpentText}}</text></button>
+  <view class="mine-functions">
+    <view class="mine-functions-head"><text>更多功能</text></view>
+    <view class="mine-fn-grid">
+      <button class="mine-fn" bindtap="editName"><text class="mine-fn-icon">✎</text><text class="mine-fn-label">修改昵称</text></button>
+      <!-- 用户 2026-09-15 要求删掉「登录身份」这一格：它只弹一个说明框（昵称 / 数字 ID），
+           不参与登录，而登录本身是 app.js onLaunch 里 wx.login 静默完成的 —— 名字有误导性。
+           昵称与数字 ID 在顶部会员卡上已经常显，不需要再占一格。 -->
+      <button class="mine-fn" bindtap="openIdentitySwitch"><text class="mine-fn-icon">⇄</text><text class="mine-fn-label">身份切换</text><text class="mine-fn-meta">{{activeIdentity === 'staff' ? '打手' : '老板'}}</text></button>
+      <button wx:if="{{activeIdentity === 'staff'}}" class="mine-fn" bindtap="openStaffWorkbench"><text class="mine-fn-icon">▤</text><text class="mine-fn-label">进入工作台</text></button>
+      <!-- 「提现」这一格 2026-09-18 按用户要求删除：它原来对两个身份都显示，老板（客户）身份不需要。
+           提现功能本身没删 —— 打手侧仍从工作台「可用佣金」跳独立提现页 pages/withdraw/index。 -->
+      <button class="mine-fn" bindtap="openMemberBenefits"><text class="mine-fn-icon">★</text><text class="mine-fn-label">会员权益</text></button>
+      <button class="mine-fn"><text class="mine-fn-icon">☎</text><text class="mine-fn-label">投诉与售后</text></button>
+    </view>
+  </view>
+  <view wx:if="{{benefitsVisible}}" class="benefit-mask" bindtap="closeMemberBenefits">
+    <view class="benefit-sheet" catchtap="noop">
+      <view class="benefit-head"><view><text>会员权益</text><text>点某一等级即切换</text></view><button bindtap="closeMemberBenefits">×</button></view>
+      <scroll-view scroll-y class="benefit-list">
+        <view wx:for="{{memberBenefits}}" wx:key="level" class="benefit-item {{item.level === memberLevel ? 'active' : ''}}" bindtap="chooseMemberLevel" data-level="{{item.level}}">
+          <text class="benefit-level">{{item.level}}</text>
+          <text class="benefit-condition">{{item.condition}}</text>
+          <text class="benefit-copy">{{item.benefits}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

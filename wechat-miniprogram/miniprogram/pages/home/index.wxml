@@ -1,0 +1,70 @@
+<view class="page-shell home-page">
+  <view wx:if="{{loading}}" class="loading">正在读取俱乐部配置...</view>
+  <view wx:elif="{{error}}" class="empty"><text>{{error}}</text><button class="retry" bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <!-- 顶部「奶油区」：搜索栏 + 头图 + 播报 + 大分类面板包成一层。
+         包这一层是为了让奶油底按**内容高度**收尾并渐变到白（见 index.wxss 的 .home-top），
+         而不是像以前那样在 .home-page 上写死 20vh —— 分类面板一加高，那条硬边就正好切在
+         子标签那一行，看着像断了一刀。 -->
+    <view class="home-top">
+      <view class="search-row">
+        <input class="search" value="{{keyword}}" bindinput="onSearch" placeholder="搜索你喜欢的单子" confirm-type="search" />
+        <button class="support" bindtap="openSupport" aria-label="联系客服">
+          <view class="headset-icon"><view class="headset-band"></view><view class="headset-ear left"></view><view class="headset-ear right"></view><view class="headset-mic"></view></view>
+        </button>
+      </view>
+
+      <view wx:if="{{config.heroImageUrl}}" class="hero surface">
+        <image class="hero-media" src="{{config.heroImageUrl}}" mode="widthFix" />
+        <view class="hero-shade"></view>
+        <view class="hero-copy">
+          <text wx:if="{{config.heroEyebrowEnabled !== false}}" class="hero-eye">{{config.heroEyebrow || '俱乐部服务承诺'}}</text>
+          <text wx:if="{{config.heroTitleEnabled !== false}}" class="hero-title">{{config.heroTitle || '客户下单，客服全程跟进'}}</text>
+          <text wx:if="{{config.heroSubtitleEnabled !== false}}" class="hero-sub">{{config.heroSubtitle || '自助下单 · 状态可查 · 售后可追踪'}}</text>
+        </view>
+      </view>
+
+      <view class="live-broadcast" wx:if="{{config.broadcastEnabled !== false && broadcasts.length}}">
+        <view class="broadcast-pill" wx:for="{{broadcasts}}" wx:key="id" style="animation-delay: {{item.delay}}s">
+          <view class="broadcast-avatar" aria-hidden="true"><view class="blank-avatar-head"></view><view class="blank-avatar-body"></view></view>
+          <text class="broadcast-text">{{item.text}}</text>
+        </view>
+      </view>
+
+      <view class="home-category-panel" wx:if="{{categories.length}}">
+        <view class="category-grid">
+          <button wx:for="{{categories}}" wx:key="name" class="category {{item.name === activeMain ? 'active' : ''}}" hover-class="category-pressed" data-name="{{item.name}}" bindtap="chooseMain">
+            <!-- 参考页那种「图标上浮 + 实心色块」的瓦片：图标与色块拆成两层，色块用负上边距顶到图标下半截上。
+                 图标必须自带 z-index 起层 —— 它在 DOM 里排在色块前面，不起层就会被色块盖掉下半截。 -->
+            <view class="category-tile">
+              <image wx:if="{{item.imageUrl}}" class="category-icon" src="{{item.imageUrl}}" mode="aspectFill" />
+              <view wx:else class="category-icon category-fallback">{{item.initial}}</view>
+              <view class="category-card"><text>{{item.name}}</text></view>
+            </view>
+          </button>
+        </view>
+        <view wx:if="{{subCategories.length}}" class="sub-tabs-gesture" catchtouchmove="noop">
+          <scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="sub-tabs">
+            <button class="{{!activeSub ? 'active' : ''}}" hover-class="sub-tab-pressed" data-name="" bindtap="chooseSub">全部类型</button>
+            <button wx:for="{{subCategories}}" wx:key="*this" class="{{item === activeSub ? 'active' : ''}}" hover-class="sub-tab-pressed" data-name="{{item}}" bindtap="chooseSub">{{item}}</button>
+          </scroll-view>
+        </view>
+      </view>
+    </view>
+
+    <view id="products" class="section-title"><text>{{activeSub || '全部类型'}}</text><text class="muted">{{activeMain}}</text></view>
+    <view class="product-grid columns-{{productsPerRow}} {{compactProducts ? 'compact' : ''}} {{ultraCompactProducts ? 'ultra-compact' : ''}}" style="{{gridStyle}}">
+      <button wx:for="{{filteredProducts}}" wx:key="id" class="product-shell" data-id="{{item.id}}" bindtap="openProduct">
+        <view class="product-card">
+          <view class="product-image"><image wx:if="{{item.imageUrl}}" src="{{item.imageUrl}}" mode="aspectFit" /><view wx:else class="product-fallback">{{config.clubName || '电竞俱乐部'}}</view></view>
+          <view class="product-body"><text class="product-title">{{item.title}}</text><text class="product-desc">{{item.desc || '暂无说明'}}</text><view class="product-meta"><view><text class="price">¥{{item.priceText}}</text><text wx:if="{{item.strikePriceText}}" class="old-price">¥{{item.strikePriceText}}</text></view><text>已售 {{item.sold || 0}}</text></view></view>
+        </view>
+      </button>
+    </view>
+    <view wx:if="{{!filteredProducts.length}}" class="empty surface">当前分类暂时没有商品</view>
+  </block>
+
+  <view wx:if="{{categoryVisible}}" class="mask" bindtap="closeChooser">
+    <view class="category-modal" catchtap="noop"><button class="category-close" bindtap="closeChooser">×</button><text class="category-modal-title">陛下想玩什么？</text><view class="category-choice-grid"><view wx:for="{{categories}}" wx:key="name" class="category-choice-shell"><button class="category-choice" data-name="{{item.name}}" bindtap="chooseMain"><image wx:if="{{item.imageUrl}}" class="category-choice-image" src="{{item.imageUrl}}" mode="aspectFill" /><text>{{item.name}}</text><text class="small">{{item.children.length}} 个类型</text></button></view></view></view>
+  </view>
+</view>
